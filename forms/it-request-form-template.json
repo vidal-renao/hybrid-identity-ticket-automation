@@ -1,1 +1,356 @@
-
+{
+  "formTitle": "IT Support Request",
+  "formDescription": "Submit your IT support needs using this form. Our team will respond as quickly as possible based on priority.",
+  "settings": {
+    "allowMultipleResponses": true,
+    "recordNames": true,
+    "onlyOrganization": true,
+    "shuffleQuestions": false,
+    "showProgressBar": true,
+    "customThankYouMessage": "Thank you for submitting your request! You'll receive a confirmation email shortly with your ticket details. Our IT team will be in touch soon.",
+    "notificationEmails": [],
+    "startDateEnabled": false,
+    "endDateEnabled": false
+  },
+  "theme": {
+    "primaryColor": "#0078d4",
+    "backgroundColor": "#ffffff",
+    "headerImage": null
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "type": "choice",
+      "questionText": "What type of support do you need?",
+      "subtitle": "Select the category that best matches your request",
+      "required": true,
+      "options": [
+        {
+          "value": "Hardware",
+          "displayText": "Hardware (laptops, monitors, keyboards, peripherals)",
+          "sortOrder": 1
+        },
+        {
+          "value": "Software",
+          "displayText": "Software (applications, licenses, installation, updates)",
+          "sortOrder": 2
+        },
+        {
+          "value": "Network",
+          "displayText": "Network (VPN, WiFi, connectivity, internet issues)",
+          "sortOrder": 3
+        },
+        {
+          "value": "Other",
+          "displayText": "Other (general IT support, account issues, other)",
+          "sortOrder": 4
+        }
+      ],
+      "allowMultipleChoices": false,
+      "displayAs": "dropdown",
+      "shuffleOptions": false,
+      "otherOption": false
+    },
+    {
+      "id": "q2",
+      "type": "text",
+      "questionText": "Brief summary of your issue",
+      "subtitle": "Provide a short title (e.g., 'Laptop won't turn on', 'Need Adobe license')",
+      "required": true,
+      "longAnswer": false,
+      "placeholder": "Enter a brief summary...",
+      "maxLength": 255
+    },
+    {
+      "id": "q3",
+      "type": "text",
+      "questionText": "Detailed description",
+      "subtitle": "Please describe your issue in detail, including any error messages, what you were doing when the problem occurred, and steps you've already tried",
+      "required": true,
+      "longAnswer": true,
+      "placeholder": "Provide detailed information about your issue...",
+      "maxLength": null
+    },
+    {
+      "id": "q4",
+      "type": "choice",
+      "questionText": "How urgent is this request?",
+      "subtitle": "Help us prioritize your request appropriately",
+      "required": true,
+      "options": [
+        {
+          "value": "High",
+          "displayText": "High - Work is blocked, urgent assistance needed immediately",
+          "sortOrder": 1
+        },
+        {
+          "value": "Medium",
+          "displayText": "Medium - Issue is impacting work but manageable for now",
+          "sortOrder": 2
+        },
+        {
+          "value": "Low",
+          "displayText": "Low - Minor inconvenience, not blocking work",
+          "sortOrder": 3
+        }
+      ],
+      "allowMultipleChoices": false,
+      "displayAs": "dropdown",
+      "shuffleOptions": false,
+      "otherOption": false
+    },
+    {
+      "id": "q5",
+      "type": "text",
+      "questionText": "Best contact email",
+      "subtitle": "We'll use this to follow up (your Microsoft account email will also be recorded)",
+      "required": true,
+      "longAnswer": false,
+      "placeholder": "your.email@company.com",
+      "validation": {
+        "type": "email",
+        "message": "Please enter a valid email address"
+      }
+    },
+    {
+      "id": "q6",
+      "type": "text",
+      "questionText": "Your office location or desk number",
+      "subtitle": "Optional: Helps our team find you if on-site hardware support is needed",
+      "required": false,
+      "longAnswer": false,
+      "placeholder": "e.g., Building A, Floor 3, Desk 42"
+    },
+    {
+      "id": "q7",
+      "type": "text",
+      "questionText": "Phone number (optional)",
+      "subtitle": "Optional: For urgent matters, we may call you directly",
+      "required": false,
+      "longAnswer": false,
+      "placeholder": "e.g., +1 (555) 123-4567"
+    }
+  ],
+  "branching": [],
+  "integrations": {
+    "powerAutomate": {
+      "enabled": true,
+      "triggerOnSubmit": true,
+      "flowName": "IT Ticket Routing - Automated"
+    },
+    "excel": {
+      "enabled": false
+    },
+    "sharepoint": {
+      "enabled": false,
+      "note": "Handled by Power Automate instead"
+    }
+  },
+  "notifications": {
+    "sendConfirmation": true,
+    "confirmationEmailBody": "Automated confirmation handled by Power Automate flow",
+    "notifyOnResponse": false
+  },
+  "accessibility": {
+    "screenReaderOptimized": true,
+    "highContrastSupport": true,
+    "keyboardNavigation": true
+  },
+  "metadata": {
+    "version": "1.0",
+    "created": "2024-12",
+    "lastModified": "2024-12",
+    "author": "IT Automation Team",
+    "notes": "This form template is designed for use with the IT Ticket Routing automation. Question IDs must match Power Automate dynamic content references."
+  },
+  "instructions": {
+    "deployment": [
+      "1. Create new form in Microsoft Forms (https://forms.office.com)",
+      "2. Manually recreate questions based on this JSON structure",
+      "3. Configure settings as specified above",
+      "4. Share form with organization",
+      "5. Copy form ID for use in Power Automate",
+      "6. Test form submission before connecting to automation"
+    ],
+    "customization": [
+      "- Adjust priority definitions based on your SLA",
+      "- Add/remove optional fields as needed",
+      "- Customize thank you message with team contact info",
+      "- Consider adding attachment option for error screenshots",
+      "- Translate to local language if needed"
+    ],
+    "notes": [
+      "Microsoft Forms doesn't support direct JSON import/export",
+      "Use this template as reference when creating the form manually",
+      "Question order and IDs are important for Power Automate mapping",
+      "Test all conditional logic before production deployment"
+    ]
+  },
+  "powerAutomateMapping": {
+    "trigger": "When a new response is submitted",
+    "action": "Get response details",
+    "fieldMapping": {
+      "q1": {
+        "formsField": "What type of support do you need?",
+        "powerAutomateReference": "Request Type",
+        "sharepointColumn": "Category",
+        "usedInLogic": true,
+        "purpose": "Determines assigned group through conditional logic"
+      },
+      "q2": {
+        "formsField": "Brief summary of your issue",
+        "powerAutomateReference": "Issue Summary",
+        "sharepointColumn": "Title (Issue)",
+        "usedInLogic": false,
+        "purpose": "Ticket title in SharePoint and email subject"
+      },
+      "q3": {
+        "formsField": "Detailed description",
+        "powerAutomateReference": "Detailed Description",
+        "sharepointColumn": "Description",
+        "usedInLogic": false,
+        "purpose": "Full issue details for IT team"
+      },
+      "q4": {
+        "formsField": "How urgent is this request?",
+        "powerAutomateReference": "Priority",
+        "sharepointColumn": "Priority",
+        "usedInLogic": false,
+        "purpose": "Sets priority level in SharePoint"
+      },
+      "q5": {
+        "formsField": "Best contact email",
+        "powerAutomateReference": "Contact Email",
+        "sharepointColumn": "ContactEmail",
+        "usedInLogic": true,
+        "purpose": "Recipient of confirmation email"
+      },
+      "q6": {
+        "formsField": "Your office location or desk number",
+        "powerAutomateReference": "Location",
+        "sharepointColumn": "Location",
+        "usedInLogic": false,
+        "purpose": "Helps hardware team locate user"
+      },
+      "q7": {
+        "formsField": "Phone number",
+        "powerAutomateReference": "Phone",
+        "sharepointColumn": null,
+        "usedInLogic": false,
+        "purpose": "Included in team notification email only"
+      },
+      "autoCapture": {
+        "formsField": "Responder's Email (auto-captured)",
+        "powerAutomateReference": "Responder's Email",
+        "sharepointColumn": "Requester",
+        "usedInLogic": false,
+        "purpose": "Tracks who submitted the ticket"
+      }
+    }
+  },
+  "exampleResponses": [
+    {
+      "scenario": "Hardware Issue - High Priority",
+      "responses": {
+        "q1": "Hardware",
+        "q2": "Laptop screen flickering",
+        "q3": "My laptop screen started flickering this morning when I opened it. It's making it impossible to work. The flickering is constant and happens regardless of what application I'm using. I've tried restarting but the issue persists.",
+        "q4": "High",
+        "q5": "john.doe@company.com",
+        "q6": "Building A, Floor 2, Desk 23",
+        "q7": "+1 (555) 123-4567"
+      },
+      "expectedRouting": "IT-Hardware"
+    },
+    {
+      "scenario": "Software Request - Medium Priority",
+      "responses": {
+        "q1": "Software",
+        "q2": "Need Adobe Acrobat Pro license",
+        "q3": "I need Adobe Acrobat Pro to edit PDF documents for client presentations. My trial version expired yesterday. This isn't urgent but I'll need it within the next week.",
+        "q4": "Medium",
+        "q5": "jane.smith@company.com",
+        "q6": "Building B, Floor 1",
+        "q7": null
+      },
+      "expectedRouting": "IT-Software"
+    },
+    {
+      "scenario": "Network Issue - High Priority",
+      "responses": {
+        "q1": "Network",
+        "q2": "Cannot connect to VPN",
+        "q3": "I'm working from home today and I can't connect to the company VPN. I get error message 'Connection failed: Unable to resolve server address'. I need access to our internal systems urgently for a client meeting in 1 hour.",
+        "q4": "High",
+        "q5": "mike.johnson@company.com",
+        "q6": "Remote/Home",
+        "q7": "+1 (555) 987-6543"
+      },
+      "expectedRouting": "IT-Network"
+    },
+    {
+      "scenario": "General Request - Low Priority",
+      "responses": {
+        "q1": "Other",
+        "q2": "Need help with email signature",
+        "q3": "I'd like to update my email signature to include my new job title. Not urgent, whenever someone has time to help would be great.",
+        "q4": "Low",
+        "q5": "sarah.williams@company.com",
+        "q6": "Building C, Floor 4",
+        "q7": null
+      },
+      "expectedRouting": "IT-ServiceDesk"
+    }
+  ],
+  "testing": {
+    "preDeploymentTests": [
+      {
+        "test": "All required fields marked correctly",
+        "expected": "Questions 1-5 show asterisk and prevent submission if empty",
+        "result": "PASS/FAIL"
+      },
+      {
+        "test": "Email validation works",
+        "expected": "Invalid email format shows error message",
+        "result": "PASS/FAIL"
+      },
+      {
+        "test": "Dropdown displays correctly",
+        "expected": "All options visible in correct order",
+        "result": "PASS/FAIL"
+      },
+      {
+        "test": "Thank you message appears",
+        "expected": "Custom message displays after submission",
+        "result": "PASS/FAIL"
+      },
+      {
+        "test": "Form restricted to organization",
+        "expected": "External users cannot access form",
+        "result": "PASS/FAIL"
+      }
+    ],
+    "postIntegrationTests": [
+      {
+        "test": "Power Automate trigger fires",
+        "expected": "Flow run appears in history immediately after submission",
+        "result": "PASS/FAIL"
+      },
+      {
+        "test": "All fields map correctly",
+        "expected": "SharePoint item contains all form data",
+        "result": "PASS/FAIL"
+      },
+      {
+        "test": "Confirmation email received",
+        "expected": "User receives email within 1 minute",
+        "result": "PASS/FAIL"
+      },
+      {
+        "test": "Team notification sent",
+        "expected": "Assigned group receives email",
+        "result": "PASS/FAIL"
+      }
+    ]
+  }
+}
