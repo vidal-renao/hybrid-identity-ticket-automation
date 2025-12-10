@@ -1,1 +1,570 @@
-
+{
+  "listName": "Tickets",
+  "description": "IT Support Ticket Repository",
+  "showInNavigation": true,
+  "enableVersioning": true,
+  "enableContentApproval": false,
+  "template": "GenericList",
+  "columns": [
+    {
+      "displayName": "Issue",
+      "internalName": "Title",
+      "type": "Text",
+      "required": true,
+      "description": "Brief summary of the IT support request",
+      "maxLength": 255,
+      "indexed": true,
+      "enforceUniqueValues": false,
+      "allowDuplicateValues": true,
+      "notes": "This is the default SharePoint Title field, mapped from Microsoft Forms 'Issue Summary'"
+    },
+    {
+      "displayName": "Description",
+      "internalName": "Description",
+      "type": "Note",
+      "required": true,
+      "description": "Detailed description of the issue including error messages or steps to reproduce",
+      "richText": false,
+      "numberOfLines": 6,
+      "appendChanges": false,
+      "allowHyperlink": true,
+      "restrictedMode": false,
+      "notes": "Mapped from Microsoft Forms 'Detailed Description' field"
+    },
+    {
+      "displayName": "Category",
+      "internalName": "Category",
+      "type": "Choice",
+      "required": true,
+      "description": "Type of IT support request",
+      "choices": [
+        "Hardware",
+        "Software",
+        "Network",
+        "Other"
+      ],
+      "defaultValue": "Other",
+      "format": "Dropdown",
+      "fillInChoice": false,
+      "notes": "Mapped from Microsoft Forms 'Request Type' field. Used by Power Automate for routing logic."
+    },
+    {
+      "displayName": "Priority",
+      "internalName": "Priority",
+      "type": "Choice",
+      "required": true,
+      "description": "Urgency level of the request",
+      "choices": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "defaultValue": "Medium",
+      "format": "Dropdown",
+      "fillInChoice": false,
+      "colorCoding": {
+        "High": "#d13438",
+        "Medium": "#ff8c00",
+        "Low": "#107c10"
+      },
+      "notes": "Mapped from Microsoft Forms 'Priority' field. Can be used for SLA calculations."
+    },
+    {
+      "displayName": "Status",
+      "internalName": "Status",
+      "type": "Choice",
+      "required": true,
+      "description": "Current state of the ticket",
+      "choices": [
+        "New",
+        "In Progress",
+        "Resolved",
+        "Closed"
+      ],
+      "defaultValue": "New",
+      "format": "Dropdown",
+      "fillInChoice": false,
+      "colorCoding": {
+        "New": "#0078d4",
+        "In Progress": "#ff8c00",
+        "Resolved": "#107c10",
+        "Closed": "#8a8886"
+      },
+      "notes": "Manually updated by IT staff. Default is 'New' when created by Power Automate."
+    },
+    {
+      "displayName": "Assigned To",
+      "internalName": "AssignedTo",
+      "type": "Text",
+      "required": false,
+      "description": "IT group or team assigned to this ticket",
+      "maxLength": 255,
+      "indexed": false,
+      "possibleValues": [
+        "IT-ServiceDesk",
+        "IT-Hardware",
+        "IT-Software",
+        "IT-Network"
+      ],
+      "notes": "Populated by Power Automate using the 'AssignedGroup' variable. Stores group name as text (not Person/Group type)."
+    },
+    {
+      "displayName": "Requester",
+      "internalName": "Requester",
+      "type": "User",
+      "required": true,
+      "description": "Person who submitted the support request",
+      "allowMultipleValues": false,
+      "userSelectionMode": "PeopleOnly",
+      "showField": "NameWithPresence",
+      "notes": "Mapped from Microsoft Forms 'Responder's Email'. Automatically captures authenticated user."
+    },
+    {
+      "displayName": "Contact Email",
+      "internalName": "ContactEmail",
+      "type": "Text",
+      "required": false,
+      "description": "Alternative contact email provided by user",
+      "maxLength": 255,
+      "indexed": false,
+      "notes": "Optional field. Mapped from Microsoft Forms 'Best contact email' if different from Responder's Email."
+    },
+    {
+      "displayName": "Location",
+      "internalName": "Location",
+      "type": "Text",
+      "required": false,
+      "description": "User's office location or desk number",
+      "maxLength": 255,
+      "indexed": false,
+      "notes": "Optional field. Mapped from Microsoft Forms 'Location' field. Useful for hardware support."
+    },
+    {
+      "displayName": "Created",
+      "internalName": "Created",
+      "type": "DateTime",
+      "required": false,
+      "description": "Timestamp when ticket was created",
+      "format": "DateAndTime",
+      "systemField": true,
+      "indexed": true,
+      "notes": "Auto-populated by SharePoint. Used for aging and SLA calculations."
+    },
+    {
+      "displayName": "Modified",
+      "internalName": "Modified",
+      "type": "DateTime",
+      "required": false,
+      "description": "Timestamp of last modification",
+      "format": "DateAndTime",
+      "systemField": true,
+      "indexed": true,
+      "notes": "Auto-updated by SharePoint. Used for tracking recent activity."
+    },
+    {
+      "displayName": "Created By",
+      "internalName": "Author",
+      "type": "User",
+      "required": false,
+      "description": "User or system account that created the item",
+      "systemField": true,
+      "notes": "Auto-populated by SharePoint. Will show Power Automate service account for automated tickets."
+    },
+    {
+      "displayName": "Modified By",
+      "internalName": "Editor",
+      "type": "User",
+      "required": false,
+      "description": "User who last modified the item",
+      "systemField": true,
+      "notes": "Auto-updated by SharePoint. Tracks who made changes to ticket."
+    }
+  ],
+  "views": [
+    {
+      "viewName": "All Items",
+      "viewType": "Standard",
+      "isDefault": false,
+      "columns": [
+        "Edit",
+        "Title",
+        "Category",
+        "Priority",
+        "Status",
+        "AssignedTo",
+        "Requester",
+        "Created"
+      ],
+      "sortBy": [
+        {
+          "field": "Created",
+          "order": "Descending"
+        }
+      ],
+      "filter": null,
+      "rowLimit": 30
+    },
+    {
+      "viewName": "Open Tickets",
+      "viewType": "Standard",
+      "isDefault": true,
+      "columns": [
+        "Edit",
+        "Title",
+        "Category",
+        "Priority",
+        "Status",
+        "AssignedTo",
+        "Requester",
+        "Created"
+      ],
+      "sortBy": [
+        {
+          "field": "Priority",
+          "order": "Ascending"
+        },
+        {
+          "field": "Created",
+          "order": "Descending"
+        }
+      ],
+      "filter": {
+        "type": "Or",
+        "conditions": [
+          {
+            "field": "Status",
+            "operator": "Eq",
+            "value": "New"
+          },
+          {
+            "field": "Status",
+            "operator": "Eq",
+            "value": "In Progress"
+          }
+        ]
+      },
+      "rowLimit": 50,
+      "notes": "Default view showing all active tickets"
+    },
+    {
+      "viewName": "High Priority Dashboard",
+      "viewType": "Standard",
+      "isDefault": false,
+      "columns": [
+        "Edit",
+        "Title",
+        "Category",
+        "Priority",
+        "Status",
+        "AssignedTo",
+        "Requester",
+        "Created"
+      ],
+      "sortBy": [
+        {
+          "field": "Created",
+          "order": "Descending"
+        }
+      ],
+      "filter": {
+        "type": "And",
+        "conditions": [
+          {
+            "field": "Priority",
+            "operator": "Eq",
+            "value": "High"
+          },
+          {
+            "field": "Status",
+            "operator": "Neq",
+            "value": "Resolved"
+          },
+          {
+            "field": "Status",
+            "operator": "Neq",
+            "value": "Closed"
+          }
+        ]
+      },
+      "rowLimit": 100,
+      "notes": "Shows urgent tickets requiring immediate attention"
+    },
+    {
+      "viewName": "Hardware Team Tickets",
+      "viewType": "Standard",
+      "isDefault": false,
+      "columns": [
+        "Edit",
+        "Title",
+        "Description",
+        "Priority",
+        "Status",
+        "Requester",
+        "Location",
+        "Created"
+      ],
+      "sortBy": [
+        {
+          "field": "Priority",
+          "order": "Ascending"
+        },
+        {
+          "field": "Created",
+          "order": "Descending"
+        }
+      ],
+      "filter": {
+        "type": "And",
+        "conditions": [
+          {
+            "field": "AssignedTo",
+            "operator": "Eq",
+            "value": "IT-Hardware"
+          }
+        ]
+      },
+      "rowLimit": 50,
+      "audience": "IT-Hardware group",
+      "notes": "Filtered view for hardware support team"
+    },
+    {
+      "viewName": "Software Team Tickets",
+      "viewType": "Standard",
+      "isDefault": false,
+      "columns": [
+        "Edit",
+        "Title",
+        "Description",
+        "Priority",
+        "Status",
+        "Requester",
+        "Created"
+      ],
+      "sortBy": [
+        {
+          "field": "Priority",
+          "order": "Ascending"
+        },
+        {
+          "field": "Created",
+          "order": "Descending"
+        }
+      ],
+      "filter": {
+        "type": "And",
+        "conditions": [
+          {
+            "field": "AssignedTo",
+            "operator": "Eq",
+            "value": "IT-Software"
+          }
+        ]
+      },
+      "rowLimit": 50,
+      "audience": "IT-Software group",
+      "notes": "Filtered view for software support team"
+    },
+    {
+      "viewName": "Network Team Tickets",
+      "viewType": "Standard",
+      "isDefault": false,
+      "columns": [
+        "Edit",
+        "Title",
+        "Description",
+        "Priority",
+        "Status",
+        "Requester",
+        "Created"
+      ],
+      "sortBy": [
+        {
+          "field": "Priority",
+          "order": "Ascending"
+        },
+        {
+          "field": "Created",
+          "order": "Descending"
+        }
+      ],
+      "filter": {
+        "type": "And",
+        "conditions": [
+          {
+            "field": "AssignedTo",
+            "operator": "Eq",
+            "value": "IT-Network"
+          }
+        ]
+      },
+      "rowLimit": 50,
+      "audience": "IT-Network group",
+      "notes": "Filtered view for network support team"
+    },
+    {
+      "viewName": "Resolved This Week",
+      "viewType": "Standard",
+      "isDefault": false,
+      "columns": [
+        "Title",
+        "Category",
+        "AssignedTo",
+        "Requester",
+        "Modified",
+        "Editor"
+      ],
+      "sortBy": [
+        {
+          "field": "Modified",
+          "order": "Descending"
+        }
+      ],
+      "filter": {
+        "type": "And",
+        "conditions": [
+          {
+            "field": "Status",
+            "operator": "Eq",
+            "value": "Resolved"
+          },
+          {
+            "field": "Modified",
+            "operator": "Geq",
+            "value": "[Today]-7"
+          }
+        ]
+      },
+      "rowLimit": 100,
+      "notes": "Used for weekly reporting and team performance tracking"
+    }
+  ],
+  "permissions": {
+    "breakInheritance": true,
+    "permissionLevels": [
+      {
+        "principal": "IT Admin Group",
+        "role": "Full Control",
+        "notes": "IT administrators can manage list settings and all items"
+      },
+      {
+        "principal": "IT-ServiceDesk",
+        "role": "Contribute",
+        "notes": "Can view, add, update, and delete items"
+      },
+      {
+        "principal": "IT-Hardware",
+        "role": "Contribute",
+        "notes": "Can view, add, update, and delete items"
+      },
+      {
+        "principal": "IT-Software",
+        "role": "Contribute",
+        "notes": "Can view, add, update, and delete items"
+      },
+      {
+        "principal": "IT-Network",
+        "role": "Contribute",
+        "notes": "Can view, add, update, and delete items"
+      },
+      {
+        "principal": "All Company",
+        "role": "Read",
+        "notes": "Optional: End users can view tickets (consider security implications)"
+      }
+    ]
+  },
+  "listSettings": {
+    "versioningEnabled": true,
+    "requireContentApproval": false,
+    "requireCheckout": false,
+    "allowAttachments": true,
+    "showUserName": true,
+    "enableFolders": false,
+    "enableMinorVersions": false,
+    "majorVersionLimit": 50,
+    "majorVersionDraftLimit": 0
+  },
+  "additionalFeatures": {
+    "alerts": {
+      "enabled": true,
+      "suggestedAlerts": [
+        {
+          "name": "High Priority Tickets",
+          "condition": "Priority equals High",
+          "recipients": ["IT Manager", "IT-ServiceDesk"],
+          "frequency": "Immediate"
+        },
+        {
+          "name": "Overdue Tickets",
+          "condition": "Created older than 24 hours AND Status not equals Resolved",
+          "recipients": ["IT Manager"],
+          "frequency": "Daily Summary"
+        }
+      ]
+    },
+    "validation": {
+      "enabled": false,
+      "formulas": []
+    },
+    "dataRetention": {
+      "enabled": false,
+      "policyDescription": "Consider implementing retention policy to archive tickets older than 2 years"
+    }
+  },
+  "integration": {
+    "powerAutomate": {
+      "inboundFlows": [
+        "IT Ticket Routing - Automated"
+      ],
+      "outboundFlows": [],
+      "webhooks": true
+    },
+    "powerBI": {
+      "enabled": false,
+      "recommendedDatasets": [
+        "Ticket Volume by Category",
+        "Average Resolution Time",
+        "Team Performance Metrics"
+      ]
+    },
+    "teams": {
+      "enabled": false,
+      "notes": "Consider adding as Teams tab for easy access"
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "created": "2024-12",
+    "author": "IT Automation Team",
+    "lastModified": "2024-12",
+    "schemaCompatibility": "SharePoint Online",
+    "notes": "This schema supports the hybrid identity ticketing automation project. All fields map to Microsoft Forms and Power Automate actions."
+  },
+  "futureEnhancements": [
+    {
+      "field": "DueDate",
+      "type": "DateTime",
+      "description": "Calculated field based on Priority for SLA tracking"
+    },
+    {
+      "field": "ResolutionNotes",
+      "type": "Note",
+      "description": "Notes added by IT staff when resolving ticket"
+    },
+    {
+      "field": "EscalationLevel",
+      "type": "Choice",
+      "description": "Track escalation status (None, Manager, Director)"
+    },
+    {
+      "field": "CustomerSatisfaction",
+      "type": "Choice",
+      "description": "Rating from user survey after resolution"
+    },
+    {
+      "field": "RelatedTickets",
+      "type": "Lookup",
+      "description": "Link to related tickets for pattern analysis"
+    }
+  ]
+}
