@@ -1,244 +1,240 @@
-# Hybrid Identity & Automated IT Ticket Routing  
-### Enterprise-grade IT Operations Automation with Microsoft 365
+# Hybrid Identity & Automated IT Ticket Routing
+Enterprise-grade IT Operations Automation with Microsoft 365
 
 ![Status](https://img.shields.io/badge/status-production-success)
 ![Documentation](https://img.shields.io/badge/docs-complete-blue)
 ![Microsoft365](https://img.shields.io/badge/Microsoft%20365-Automation-blue)
-![PowerAutomate](https://img.shields.io/badge/Power%20Automate-Flow%20Enabled-purple)
+![PowerAutomate](https://img.shields.io/badge/Power%20Automate-Flow-purple)
 ![SharePoint](https://img.shields.io/badge/SharePoint-Ticketing%20Backend-green)
 
-This repository contains a full end-to-end implementation of a **Hybrid Identity lab** and an **enterprise IT ticket automation system**, built using Microsoft 365:
+This repository contains a complete implementation of a Hybrid Identity lab and an automated IT ticket routing system built with Microsoft 365:
 
-- Microsoft Entra ID (Azure AD)  
-- Active Directory (optional, hybrid identity)  
-- Azure AD Connect / Entra Connect  
-- Microsoft Forms  
-- Power Automate  
-- SharePoint Online  
-- Microsoft 365 Groups  
+- Microsoft Entra ID (Azure AD)
+- Active Directory (optional hybrid identity)
+- Azure AD Connect / Entra Connect
+- Microsoft Forms
+- Power Automate
+- SharePoint Online
+- Microsoft 365 Groups
 
-The project demonstrates how organizations can **automate IT Operations**, reduce manual workload, and create scalable support structures aligned with **ITIL** and **modern workplace engineering**.
-
----
-
-# 📌 Key Features
-
-## 🔐 Hybrid Identity Architecture (AD + Entra ID)
-- Supports **cloud-only** + **synchronized on-prem AD**  
-- Unified authentication for automation workflows  
-- Group-based team assignment  
-- Identity lifecycle aligned with enterprise IAM  
+It demonstrates how organizations can automate IT operations, reduce manual workload, and create scalable support systems aligned with modern workplace engineering.
 
 ---
 
-## 📝 Standardized Request Intake (Microsoft Forms)
-Centralized IT request intake using a Microsoft Form.
+# Key Features
 
-➡️ **Form Template:**  
-📄 [it-request-form-template.json](forms/it-request-form-template.json)
+## Hybrid Identity Architecture (AD + Entra ID)
 
-Form inputs include:
+- Supports cloud-only and hybrid synchronized identity
+- Unified authentication for automation workflows
+- Group-based team assignment
+- Identity lifecycle aligned with enterprise IAM
 
-- Full Name  
-- Corporate Email  
-- Department  
-- Device Type / Category  
-- Reason for Request  
+---
+
+## Standardized Request Intake (Microsoft Forms)
+
+A centralized Microsoft Form collects IT service requests.
+
+Form template:  
+`forms/it-request-form-template.json`
+
+Includes fields for:
+
+- Name  
+- Email  
+- Category  
+- Issue summary  
+- Detailed description  
 - Priority  
-- Required-by date  
-- Attachments  
+- Location  
+- Contact email  
 
 ---
 
-## ⚙️ Automated Ticket Routing (Power Automate)
+## Automated Ticket Routing (Power Automate)
 
-Zero-touch ticket creation and assignment using dynamic routing.
+The flow creates SharePoint tickets automatically and routes them to the correct IT team.
 
-➡️ **Power Automate Flow:**  
-📄 [ticket-routing-flow.json](power-automate/ticket-routing-flow.json)
+Flow definition:  
+`power-automate/ticket-routing-flow.json`
 
-➡️ **Flow Variable Docs:**  
-📄 [flow-variables.md](power-automate/flow-variables.md)
+Flow variable documentation:  
+`power-automate/flow-variables.md`
 
-### Logic:
-```text
-IF Category contains "Hardware" → IT-Hardware  
-IF Category contains "Software" → IT-Software  
-IF Category contains "Network" → IT-Network  
-ELSE → IT-ServiceDesk (default)
+Routing logic:
+
+```
+IF Category = Hardware  → IT-Hardware
+IF Category = Software  → IT-Software
+IF Category = Network   → IT-Network
+ELSE                    → IT-ServiceDesk
+```
 
 Includes:
 
-Conditional branching
+- Conditional logic  
+- HTML email notifications  
+- SharePoint integration  
+- Identity-driven assignment  
 
-HTML email notifications
+---
 
-SharePoint integration
+# SharePoint Ticket Backend
 
-Identity-driven assignment
+Ticket list schema:  
+`sharepoint/tickets-list-schema.json`
 
-Default fail-safe routing
+Custom views:  
+`sharepoint/custom-views.md`
 
-📁 SharePoint Ticket Backend (ITSM Core)
-
-➡️ Ticket List Schema:
-📄 tickets-list-schema.json
-
-➡️ Custom Views:
-📄 custom-views.md
-
-➡️ Permissions Model:
-📄 permissions-model.md
+Permissions model:  
+`sharepoint/permissions-model.md`
 
 Features:
 
-Issue title
+- Issue  
+- Description  
+- Priority  
+- Category  
+- Status lifecycle  
+- Assigned team  
+- Requester  
+- Location  
+- Full audit trail  
 
-Description generated from Form
+---
 
-Status (New → In Progress → Completed → Closed)
+# Architecture Diagrams
 
-Priority
+## Architecture Overview
+![Architecture Diagram](documentation/architecture-diagram.png)
 
-Request Category
+## Flow Logic Diagram
+![Flow Logic Diagram](documentation/flow-logic-diagram.png)
 
-Assigned Team
+Setup Guide:  
+`documentation/setup-guide.md`
 
-Due date
+---
 
-Complete audit trail
+# Quick Start
 
-🧩 Architecture Diagrams
-Architecture Overview
+1. Deploy hybrid identity (optional)
+2. Create Microsoft 365 IT groups
+3. Deploy the SharePoint Tickets list
+4. Import the Microsoft Form
+5. Import or recreate the Power Automate flow
+6. Test the full workflow
 
-🖼 architecture-diagram.png
+Full setup instructions:  
+`documentation/setup-guide.md`
 
-Flow Logic Diagram
+---
 
-🖼 flow-logic-diagram.png
+# Repository Structure
 
-Setup Guide
+```
+documentation/
+ ├── setup-guide.md
+ ├── architecture-diagram.png
+ └── flow-logic-diagram.png
 
-📘 setup-guide.md
+power-automate/
+ ├── ticket-routing-flow.json
+ └── flow-variables.md
 
-🚀 Quick Start Guide
+sharepoint/
+ ├── tickets-list-schema.json
+ ├── custom-views.md
+ └── permissions-model.md
 
-1️⃣ Prepare Hybrid Identity (Optional AD sync)
-2️⃣ Create Microsoft 365 Groups (IT teams)
-3️⃣ Deploy SharePoint Tickets list
-4️⃣ Import Microsoft Form
-5️⃣ Import Power Automate Flow
-6️⃣ Validate full workflow end-to-end
+forms/
+ └── it-request-form-template.json
 
-📘 Full instructions:
-➡️ setup-guide.md
+screenshots/
+ ├── entra-id-groups.png
+ ├── power-automate-flow.png
+ └── sharepoint-dashboard.png
 
-📂 Repository Structure (Clickable)
-📁 documentation/
+README.md
+```
 
-📘 setup-guide.md
+---
 
-🖼 architecture-diagram.png
+# Screenshots
 
-🖼 flow-logic-diagram.png
+## Entra ID – IT Groups
+![Entra ID Groups](screenshots/entra-id-groups.png)
 
-📁 power-automate/
+## Power Automate – Routing Flow
+![Power Automate Flow](screenshots/power-automate-flow.png)
 
-🔄 ticket-routing-flow.json
+## SharePoint ITSM Dashboard
+![SharePoint Dashboard](screenshots/sharepoint-dashboard.png)
 
-🧩 flow-variables.md
+---
 
-📁 sharepoint/
+# Business Value
 
-📄 tickets-list-schema.json
+| Challenge | Solution |
+|----------|----------|
+| Requests arrive by email | Centralized SharePoint ticketing |
+| Manual assignment | Automated routing engine |
+| No visibility | SharePoint dashboards & views |
+| No audit trail | Versioning + Flow logs |
+| Bottlenecks | Group-based assignment |
 
-📄 custom-views.md
+---
 
-🔐 permissions-model.md
+# Technology Stack
 
-📁 forms/
+| Technology | Purpose |
+|-----------|---------|
+| Microsoft Entra ID | Identity & RBAC |
+| Active Directory | On-prem identity |
+| Entra Connect | Sync engine |
+| Microsoft Forms | Frontend request intake |
+| Power Automate | Workflow automation |
+| SharePoint Online | Ticket backend |
+| Exchange Online | Notifications |
+| Microsoft 365 Groups | Assignment routing |
 
-📄 it-request-form-template.json
+---
 
-📁 screenshots/
+# Skills Demonstrated
 
-🖼 entra-id-groups.png
+- Hybrid identity architecture
+- IAM administration
+- Power Automate engineering
+- SharePoint schema design
+- ITSM workflow modeling
+- Routing logic automation
+- Modern workplace engineering
+- Professional documentation
 
-🖼 power-automate-flow.png
+---
 
-🖼 sharepoint-dashboard.png
+# Roadmap
 
-💼 Business Value
-Challenge	Solution
-Requests arrive by email	Centralized SharePoint Ticketing
-Manual assignment	Automated routing engine
-No visibility	Dashboards + Views
-Ticket bottlenecks	Group-based assignment
-No audit trail	SharePoint versioning + flow logs
-🛠️ Technology Stack
-Technology	Purpose
-Microsoft Entra ID	Identity & RBAC
-Active Directory	On-prem identity
-Entra Connect	Sync engine
-Microsoft Forms	Intake frontend
-Power Automate	Automation
-SharePoint Online	Ticket backend
-Exchange Online	Notifications
-Microsoft 365 Groups	Team routing
-🎓 Skills Demonstrated
+- SLA timers and escalations
+- Teams Adaptive Cards notifications
+- Power BI dashboards
+- AI-based category prediction
+- Technician mobile app (Power Apps)
 
-Identity & Access Management
+---
 
-Cloud & Hybrid Identity Architecture
+# Author
 
-Automation with Power Automate
-
-SharePoint engineering
-
-ITSM workflow design
-
-Routing engines
-
-Modern Workplace deployment
-
-Documentation & engineering best practices
-
-🔮 Roadmap
-
-SLA escalations
-
-Adaptive Card notifications (Teams)
-
-Power BI dashboards
-
-AI category detection
-
-Technician mobile app (Power Apps)
-
-👤 Author
-
-Vidal Reñao Lopelo
+**Vidal Reñao Lopelo**  
 Cloud & IT Infrastructure Engineer
 
-📧 Email: mailto:vidal-31@hotmail.com
-🔗 LinkedIn: https://www.linkedin.com/in/vidalrenao
+Email: vidal-31@hotmail.com  
+LinkedIn: https://www.linkedin.com/in/vidalrenao  
+GitHub: https://github.com/vidal-renao  
+Project Repo: https://github.com/vidal-renao/hybrid-identity-ticket-automation
 
-🐙 GitHub Profile: https://github.com/vidal-renao
-
-📦 Project Repo: https://github.com/vidal-renao/hybrid-identity-ticket-automation
-
-⭐ Acknowledgments
-
-This project follows engineering principles used in:
-
-Modern Workplace Engineering
-
-Cloud Infrastructure Teams
-
-IT Operations & ITSM
-
-If you find this project useful, please give it a star ⭐
-
-Last Updated: December 2024
+Last Updated: December 2024  
+Version: 1.0  
 Status: Production-ready
-Version: 1.0
