@@ -674,6 +674,93 @@ As the system evolves, consider adding:
 - **Customer Satisfaction View**: Filter by satisfaction ratings (future field)
 
 ---
+More  methods
+
+# SharePoint – Tickets List Views
+
+This document describes the recommended views for operating the Tickets list efficiently.
+
+---
+
+## 1. All Tickets (Default View)
+
+**Purpose**: General overview.
+
+- Columns:
+  - Issue
+  - Request Category
+  - Priority
+  - Status
+  - Assigned to
+  - Due Date
+  - Created
+- Sort:
+  - Created (Descending)
+
+---
+
+## 2. Open Tickets
+
+**Purpose**: Active workload.
+
+- Filter:
+  - Status is not equal to `Resolved`
+  - Status is not equal to `Closed`
+- Sort:
+  - Priority (High → Low)
+  - Created (Descending)
+
+---
+
+## 3. High Priority Tickets
+
+**Purpose**: Incident management.
+
+- Filter:
+  - Priority = `High`
+  - Status ≠ `Closed`
+- Sort:
+  - Created (Descending)
+
+---
+
+## 4. Hardware Team Queue
+
+**Purpose**: Dedicated view for IT-Hardware.
+
+- Filter:
+  - Assigned to = `IT-Hardware`
+  - Status ≠ `Closed`
+
+---
+
+## 5. Software Team Queue
+
+**Purpose**: Dedicated view for IT-Software.
+
+- Filter:
+  - Assigned to = `IT-Software`
+  - Status ≠ `Closed`
+
+---
+
+## 6. Network Team Queue
+
+**Purpose**: Dedicated view for IT-Network.
+
+- Filter:
+  - Assigned to = `IT-Network`
+  - Status ≠ `Closed`
+
+---
+
+## 7. My Active Tickets
+
+**Purpose**: Individual workload tracking.
+
+- Filter:
+  - Assigned to contains `[Me]`
+  - Status ≠ `Closed`
 
 ## Related Documentation
 
