@@ -1,8 +1,24 @@
 # SharePoint Custom Views Configuration
 
+> 🔗 **Navigation**
+> - 🏠 [Back to main README](../README.md)
+> - 📘 [Setup Guide](../documentation/setup-guide.md)
+> - 📑 [Tickets List Schema](./tickets-list-schema.json)
+> - 🔐 [Permissions Model](./permissions-model.md)
+> - ⚙️ [Power Automate – Ticket Routing Flow](../power-automate/ticket-routing-flow.json)
+> - 🧮 [Power Automate – Flow Variables](../power-automate/flow-variables.md)
+> - 📝 [IT Request Form Template](../forms/it-request-form-template.json)
+
+---
+
 ## Overview
 
-This document provides detailed instructions for creating and configuring custom views in the Tickets SharePoint list. Each view serves a specific operational purpose for IT teams and management.
+This document provides detailed instructions for creating and configuring custom views in the **Tickets** SharePoint list. Each view serves a specific operational purpose for IT teams and management.
+
+These views assume the list structure defined in:  
+👉 [Tickets List Schema](./tickets-list-schema.json)  
+and the routing logic implemented in:  
+👉 [Power Automate – Ticket Routing Flow](../power-automate/ticket-routing-flow.json)
 
 ---
 
@@ -13,14 +29,14 @@ Display all active tickets requiring attention from IT teams.
 
 ### Configuration
 
-**View Name**: `Open Tickets`  
-**View Type**: Standard View  
-**Set as Default**: Yes  
-**Personal/Public**: Public View (visible to all)
+- **View Name**: `Open Tickets`  
+- **View Type**: Standard View  
+- **Set as Default**: Yes  
+- **Personal/Public**: Public View (visible to all)
 
 ### Columns to Display (in order)
 
-1. **Edit** (control column) - checkbox for bulk actions
+1. **Edit** (control column)
 2. **Title** (Issue)
 3. **Category**
 4. **Priority**
@@ -31,37 +47,39 @@ Display all active tickets requiring attention from IT teams.
 
 ### Filter Settings
 
-```
+```text
 Show items only when the following is true:
   Status is equal to "New"
     OR
   Status is equal to "In Progress"
-```
 
-**Filter Formula** (Advanced Mode):
-```
+Filter Formula (Advanced Mode):
+
 [Status] = "New" OR [Status] = "In Progress"
-```
 
-### Sort Order
 
-1. **Primary Sort**: Priority (Ascending)
-   - This shows High priority first
-2. **Secondary Sort**: Created (Descending)
-   - Within same priority, newest tickets first
+Sort Order
 
-### Additional Settings
+Primary Sort: Priority (Ascending)
 
-- **Item Limit**: 50 items
-- **Display**: Show items in batches of 50
-- **Mobile View**: Enabled
-- **Totals**: None
-- **Style**: Default
+Secondary Sort: Created (Descending)
 
-### Column Formatting (Optional - JSON)
+Additional Settings
 
-**Priority Column Coloring**:
-```json
+Item Limit: 50 items
+
+Display: Show items in batches of 50
+
+Mobile View: Enabled
+
+Totals: None
+
+Style: Default
+
+Column Formatting (Optional – JSON)
+
+Priority Column Coloring:
+
 {
   "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
   "elmType": "div",
@@ -126,336 +144,399 @@ Show items only when the following is true:
   },
   "txtContent": "@currentField"
 }
-```
 
----
 
-## View 2: High Priority Dashboard
+🔗 Related:
 
-### Purpose
+Tickets List Schema
+
+Routing Logic – Power Automate
+
+View 2: High Priority Dashboard
+Purpose
+
 Quick access to urgent tickets requiring immediate attention.
 
-### Configuration
+Configuration
 
-**View Name**: `High Priority Dashboard`  
-**View Type**: Standard View  
-**Set as Default**: No  
-**Personal/Public**: Public View
+View Name: High Priority Dashboard
 
-### Columns to Display
+View Type: Standard View
 
-1. **Edit**
-2. **Title**
-3. **Category**
-4. **Priority**
-5. **Status**
-6. **Assigned To**
-7. **Requester**
-8. **Created**
+Set as Default: No
 
-### Filter Settings
+Personal/Public: Public View
 
-```
+Columns to Display
+
+Edit
+
+Title
+
+Category
+
+Priority
+
+Status
+
+Assigned To
+
+Requester
+
+Created
+
+Filter Settings
 Show items only when ALL of the following are true:
   Priority is equal to "High"
     AND
   Status is not equal to "Resolved"
     AND
   Status is not equal to "Closed"
-```
 
-**Filter Formula**:
-```
+
+Filter Formula:
+
 [Priority] = "High" AND [Status] <> "Resolved" AND [Status] <> "Closed"
-```
 
-### Sort Order
+Sort Order
 
-1. **Primary Sort**: Created (Descending)
-   - Shows most recent urgent tickets first
+Primary Sort: Created (Descending)
 
-### Additional Settings
+Additional Settings
 
-- **Item Limit**: 100 items
-- **Display**: Show all items
-- **Alert Recommendation**: Set up alert for this view to notify managers of new high-priority tickets
+Item Limit: 100 items
 
----
+Display: Show all items
 
-## View 3: Hardware Team Tickets
+Recommendation: Set up alerts for this view for IT managers.
 
-### Purpose
-Filtered view for hardware support team members.
+View 3: Hardware Team Tickets
+Purpose
 
-### Configuration
+Filtered view for the hardware support team.
 
-**View Name**: `Hardware Team Tickets`  
-**View Type**: Standard View  
-**Audience**: IT-Hardware group members
+Configuration
 
-### Columns to Display
+View Name: Hardware Team Tickets
 
-1. **Edit**
-2. **Title**
-3. **Description**
-4. **Priority**
-5. **Status**
-6. **Requester**
-7. **Location** (important for hardware support)
-8. **Created**
+View Type: Standard View
 
-### Filter Settings
+Audience: IT-Hardware group members
 
-```
+Columns to Display
+
+Edit
+
+Title
+
+Description
+
+Priority
+
+Status
+
+Requester
+
+Location (important for hardware support)
+
+Created
+
+Filter Settings
 Show items only when the following is true:
   Assigned To is equal to "IT-Hardware"
-```
 
-**Filter Formula**:
-```
+
+Filter Formula:
+
 [AssignedTo] = "IT-Hardware"
-```
 
-### Sort Order
+Sort Order
 
-1. **Primary Sort**: Priority (Ascending)
-2. **Secondary Sort**: Created (Descending)
+Primary Sort: Priority (Ascending)
 
-### Additional Settings
+Secondary Sort: Created (Descending)
 
-- **Item Limit**: 50 items
-- **Target Audience**: IT-Hardware Microsoft 365 Group
-- **Pin to Top**: Option to pin critical items
+Additional Settings
 
----
+Item Limit: 50 items
 
-## View 4: Software Team Tickets
+Target Audience: IT-Hardware Microsoft 365 Group
 
-### Configuration
+🔗 Related:
 
-**View Name**: `Software Team Tickets`  
-**Audience**: IT-Software group members
+Permissions Model
 
-### Columns to Display
+Routing Logic
 
-1. **Edit**
-2. **Title**
-3. **Description**
-4. **Priority**
-5. **Status**
-6. **Requester**
-7. **Created**
+View 4: Software Team Tickets
+Purpose
 
-### Filter Settings
+Dedicated view for IT-Software.
 
-```
+Configuration
+
+View Name: Software Team Tickets
+
+View Type: Standard View
+
+Audience: IT-Software group members
+
+Columns to Display
+
+Edit
+
+Title
+
+Description
+
+Priority
+
+Status
+
+Requester
+
+Created
+
+Filter Settings
 [AssignedTo] = "IT-Software"
-```
 
-### Sort Order
-Same as Hardware Team view
+Sort Order
 
----
+Same as Hardware Team Tickets:
 
-## View 5: Network Team Tickets
+Priority (Ascending)
 
-### Configuration
+Created (Descending)
 
-**View Name**: `Network Team Tickets`  
-**Audience**: IT-Network group members
+View 5: Network Team Tickets
+Purpose
 
-### Columns to Display
+Dedicated view for IT-Network.
 
-1. **Edit**
-2. **Title**
-3. **Description**
-4. **Priority**
-5. **Status**
-6. **Requester**
-7. **Created**
+Configuration
 
-### Filter Settings
+View Name: Network Team Tickets
 
-```
+View Type: Standard View
+
+Audience: IT-Network group members
+
+Columns to Display
+
+Edit
+
+Title
+
+Description
+
+Priority
+
+Status
+
+Requester
+
+Created
+
+Filter Settings
 [AssignedTo] = "IT-Network"
-```
 
-### Sort Order
-Same as Hardware Team view
+Sort Order
 
----
+Same as Hardware Team Tickets
 
-## View 6: Service Desk Tickets
+View 6: Service Desk Tickets
+Purpose
 
-### Configuration
+Service Desk triage and overview.
 
-**View Name**: `Service Desk Tickets`  
-**Audience**: IT-ServiceDesk group members
+Configuration
 
-### Columns to Display
+View Name: Service Desk Tickets
 
-1. **Edit**
-2. **Title**
-3. **Description**
-4. **Category**
-5. **Priority**
-6. **Status**
-7. **Requester**
-8. **Created**
+View Type: Standard View
 
-### Filter Settings
+Audience: IT-ServiceDesk group members
 
-```
+Columns to Display
+
+Edit
+
+Title
+
+Description
+
+Category
+
+Priority
+
+Status
+
+Requester
+
+Created
+
+Filter Settings
 [AssignedTo] = "IT-ServiceDesk"
-```
 
-### Sort Order
+Sort Order
 
-1. **Primary Sort**: Priority (Ascending)
-2. **Secondary Sort**: Created (Descending)
+Primary Sort: Priority (Ascending)
 
-### Special Notes
-Service Desk needs to see Category to help with triage and potential reassignment.
+Secondary Sort: Created (Descending)
 
----
+📝 Service Desk should see Category to help with triage and potential reassignment.
 
-## View 7: Resolved This Week
+View 7: Resolved This Week
+Purpose
 
-### Purpose
-Weekly reporting and team performance tracking.
+Weekly reporting and performance tracking.
 
-### Configuration
+Configuration
 
-**View Name**: `Resolved This Week`  
-**View Type**: Standard View  
-**Purpose**: Reporting and metrics
+View Name: Resolved This Week
 
-### Columns to Display
+View Type: Standard View
 
-1. **Title**
-2. **Category**
-3. **Assigned To**
-4. **Requester**
-5. **Created**
-6. **Modified**
-7. **Modified By**
+Purpose: Reporting / metrics
 
-### Filter Settings
+Columns to Display
 
-```
+Title
+
+Category
+
+Assigned To
+
+Requester
+
+Created
+
+Modified
+
+Modified By
+
+Filter Settings
 Show items only when ALL of the following are true:
   Status is equal to "Resolved"
     AND
   Modified is greater than or equal to [Today]-7
-```
 
-**Filter Formula**:
-```
+
+Filter Formula:
+
 [Status] = "Resolved" AND [Modified] >= [Today]-7
-```
 
-### Sort Order
+Sort Order
 
-1. **Primary Sort**: Modified (Descending)
-   - Shows most recently resolved tickets first
+Primary Sort: Modified (Descending)
 
-### Additional Settings
+Additional Settings
 
-- **Item Limit**: 100 items
-- **Totals**: Count of Title field (shows total resolved tickets)
-- **Group By**: Assigned To (optional, to see per-team metrics)
+Item Limit: 100 items
 
----
+Totals: Count on Title (total resolved tickets)
 
-## View 8: My Submitted Tickets (Personal View)
+Optional: Group by Assigned To for per-team metrics.
 
-### Purpose
-Allow end users to see tickets they've submitted.
+View 8: My Submitted Tickets (Personal View)
+Purpose
 
-### Configuration
+Allow end users to see the tickets they have submitted.
 
-**View Name**: `My Submitted Tickets`  
-**View Type**: Personal View (each user sees their own)  
-**Create For**: End users with Read permissions
+Configuration
 
-### Columns to Display
+View Name: My Submitted Tickets
 
-1. **Title**
-2. **Category**
-3. **Priority**
-4. **Status**
-5. **Assigned To**
-6. **Created**
+View Type: Personal View
 
-### Filter Settings
+Audience: End users with Read permissions
 
-```
+Columns to Display
+
+Title
+
+Category
+
+Priority
+
+Status
+
+Assigned To
+
+Created
+
+Filter Settings
 Show items only when the following is true:
   Requester is equal to [Me]
-```
 
-**Filter Formula**:
-```
+
+Filter Formula:
+
 [Requester] = [Me]
-```
 
-### Sort Order
+Sort Order
 
-1. **Primary Sort**: Created (Descending)
+Primary Sort: Created (Descending)
 
-### Permissions Note
+Permissions Note
+
 Users need at least Read permission on the list to use this view.
 
----
+View 9: All Tickets (Admin View)
+Purpose
 
-## View 9: All Tickets (Admin View)
+Complete unfiltered view for admins and auditors.
 
-### Purpose
-Complete unfiltered view for administrators and auditing.
+Configuration
 
-### Configuration
+View Name: All Tickets
 
-**View Name**: `All Tickets`  
-**View Type**: Standard View  
-**Audience**: IT Admins only
+View Type: Standard View
 
-### Columns to Display
+Audience: IT Admins only
 
-1. **Edit**
-2. **ID** (ticket number)
-3. **Title**
-4. **Category**
-5. **Priority**
-6. **Status**
-7. **Assigned To**
-8. **Requester**
-9. **Created**
-10. **Created By**
-11. **Modified**
-12. **Modified By**
+Columns to Display
 
-### Filter Settings
-None - shows all tickets
+Edit
 
-### Sort Order
+ID (ticket number)
 
-1. **Primary Sort**: ID (Descending)
-   - Shows newest tickets first by ID
+Title
 
-### Additional Settings
+Category
 
-- **Item Limit**: 100 items
-- **Display**: Show items in batches
-- **Include**: ID column for reference
+Priority
 
----
+Status
 
-## Advanced View Features
+Assigned To
 
-### Conditional Formatting
+Requester
 
-#### Status Column
-```json
+Created
+
+Created By
+
+Modified
+
+Modified By
+
+Filter Settings
+
+None (shows all tickets)
+
+Sort Order
+
+Primary Sort: ID (Descending)
+
+Additional Settings
+
+Item Limit: 100 items
+
+Display: Show in batches
+
+Advanced View Features
+Conditional Formatting – Status Column
 {
   "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
   "elmType": "div",
@@ -477,55 +558,54 @@ None - shows all tickets
     }
   ]
 }
-```
 
-### Group By Configuration
+Group By Configuration
 
-For reporting views, consider grouping:
+Example: Group by Assigned To
 
-**Example: Group by Assigned To**
-```
 Group By: Assigned To
 Show groups: Expanded
 Sort groups by: Assigned To (Ascending)
-```
 
-**Example: Group by Priority**
-```
+
+Example: Group by Priority
+
 Group By: Priority
 Show groups: Collapsed
 Sort groups by: Priority (Ascending)
-```
 
----
+Creating Views: Step-by-Step
+Method 1: SharePoint UI
 
-## Creating Views: Step-by-Step
+Navigate to the Tickets list.
 
-### Method 1: SharePoint UI
+Click All Items dropdown → Create new view.
 
-1. Navigate to Tickets list
-2. Click **All Items** dropdown → **Create new view**
-3. Choose **Standard View**
-4. Enter view name
-5. Select columns to display (checkboxes)
-6. Configure filter in "Filter" section
-7. Configure sort in "Sort" section
-8. Set item limit in "Item Limit" section
-9. Choose audience (Public/Personal) in "Audience" section
-10. Click **OK**
+Choose Standard View.
 
-### Method 2: PowerShell (For Multiple Views)
+Enter view name.
 
-```powershell
+Select columns to display.
+
+Configure Filter.
+
+Configure Sort.
+
+Set Item Limit.
+
+Choose Audience (Public/Personal).
+
+Click OK.
+
+Method 2: PowerShell (PnP)
 Connect-PnPOnline -Url "https://yourtenant.sharepoint.com/sites/ITSupport" -Interactive
 
 # Example: Create Hardware Team view
-Add-PnPView -List "Tickets" -Title "Hardware Team Tickets" -Fields "Title","Description","Priority","Status","Requester","Location","Created" -Query "<Where><Eq><FieldRef Name='AssignedTo'/><Value Type='Text'>IT-Hardware</Value></Eq></Where><OrderBy><FieldRef Name='Priority' Ascending='TRUE'/><FieldRef Name='Created' Ascending='FALSE'/></OrderBy>"
-```
+Add-PnPView -List "Tickets" -Title "Hardware Team Tickets" `
+  -Fields "Title","Description","Priority","Status","Requester","Location","Created" `
+  -Query "<Where><Eq><FieldRef Name='AssignedTo'/><Value Type='Text'>IT-Hardware</Value></Eq></Where><OrderBy><FieldRef Name='Priority' Ascending='TRUE'/><FieldRef Name='Created' Ascending='FALSE'/></OrderBy>"
 
-### Method 3: PnP Provisioning Template
-
-```xml
+Method 3: PnP Provisioning Template
 <pnp:View DisplayName="Open Tickets" DefaultView="TRUE">
   <pnp:ViewFields>
     <pnp:FieldRef Name="Title" />
@@ -550,226 +630,153 @@ Add-PnPView -List "Tickets" -Title "Hardware Team Tickets" -Fields "Title","Desc
   </pnp:Query>
   <pnp:RowLimit>50</pnp:RowLimit>
 </pnp:View>
-```
 
----
+View Maintenance
+Best Practices
 
-## View Maintenance
+✅ DO
 
-### Best Practices
+Create views specific to each team's needs.
 
-✅ **DO**:
-- Create views specific to each team's needs
-- Use descriptive view names
-- Set appropriate default view for main use case
-- Test filters with sample data
-- Document view purposes for new team members
+Use descriptive view names.
 
-❌ **DON'T**:
-- Create too many similar views (causes confusion)
-- Use complex filters that impact performance
-- Grant edit permissions to views intended for read-only use
-- Forget to update views when adding new columns
+Set an appropriate default view.
 
-### Performance Optimization
+Test filters with real data.
 
-- **Indexed Columns**: Ensure frequently filtered columns are indexed
-  - Status, Priority, Created, AssignedTo should all be indexed
-- **Item Limits**: Use reasonable limits (50-100 items) for better performance
-- **Avoid**: Filtering on calculated fields or lookup columns when possible
+Document view purposes for new team members.
 
-### Testing Views
+❌ DON'T
 
-```
-Test Checklist:
+Create too many similar views.
+
+Use overly complex filters that hurt performance.
+
+Let everyone modify shared views.
+
+Forget to update views when adding new columns.
+
+Performance Optimization
+
+Indexed Columns:
+Index frequently filtered columns: Status, Priority, Created, AssignedTo.
+
+Item Limits:
+Use 50–100 items per page.
+
+Avoid complex filters on calculated or lookup columns when possible.
+
+Testing Views – Checklist
 □ View displays expected tickets
 □ Filter logic works correctly
-□ Sort order is intuitive
-□ Columns are appropriately sized
-□ Permissions are correct (public vs. personal)
-□ Performance is acceptable (<3 seconds to load)
+□ Sort order makes sense
+□ Columns are readable and sized well
+□ Permissions are correct (Public / Personal)
+□ Performance is acceptable (<3 seconds)
 □ Mobile view renders properly
-```
 
----
+Alerting on Views
+Setting Up Alerts
 
-## Alerting on Views
+Example for High Priority Dashboard:
 
-### Setting Up Alerts
+Open the High Priority Dashboard view.
 
-For high-priority monitoring:
+Click Alert me in the toolbar.
 
-1. Open the **High Priority Dashboard** view
-2. Click **Alert me** in the toolbar
-3. Configure alert:
-   ```
-   Alert Title: New High Priority Tickets
-   Send to: [Your email]
-   Change Type: New items are added
-   When to Send: Immediately
-   ```
+Configure alert:
 
-### Recommended Alerts
+Alert Title: New High Priority Tickets
 
-| View | Alert Name | When | Recipients |
-|------|------------|------|------------|
-| High Priority Dashboard | Urgent Tickets | New items | IT Manager, Service Desk |
-| Open Tickets | Unresolved Old Tickets | Daily summary | IT Manager |
-| Hardware Team Tickets | New Hardware Requests | Immediate | IT-Hardware group |
-| Software Team Tickets | New Software Requests | Immediate | IT-Software group |
+Send To: IT Manager / Service Desk leads
 
----
+Change Type: New items are added
 
-## Exporting View Data
+When to Send: Immediately
 
-### To Excel
-1. Open any view
-2. Click **Export to Excel** in toolbar
-3. Excel file downloads with current filter applied
-4. Use for offline analysis or reporting
+Recommended Alerts
+View	Alert Name	When	Recipients
+High Priority Dashboard	Urgent Tickets	New items	IT Manager, Service Desk
+Open Tickets	Daily Open Summary	Daily summary	IT Manager
+Hardware Team Tickets	New Hardware Requests	New items	IT-Hardware group
+Software Team Tickets	New Software Requests	New items	IT-Software group
+Exporting View Data
+To Excel
 
-### To Power BI
-1. In Power BI Desktop, click **Get Data** → **SharePoint Online List**
-2. Enter site URL
-3. Select "Tickets" list
-4. Apply view filters in Power Query if needed
+Open any view.
 
----
+Click Export to Excel in the toolbar.
 
-## Troubleshooting Views
+Excel file downloads with current filter applied.
 
-### Issue: View Not Showing Expected Items
+To Power BI
 
-**Check**:
-- Filter formula syntax is correct
-- Column internal names match (case-sensitive)
-- User has permissions to view items
-- Items actually match filter criteria
+In Power BI Desktop, select Get Data → SharePoint Online List.
 
-### Issue: View Performance is Slow
+Enter the site URL.
 
-**Solutions**:
-- Reduce item limit
-- Index filtered columns
-- Simplify filter logic
-- Remove unnecessary columns
+Choose the Tickets list.
 
-### Issue: Users Can't See View
+Apply view-like filters in Power Query if needed.
 
-**Check**:
-- View is set to "Public" not "Personal"
-- User has at least Read permission on list
-- Audience targeting is correct (if used)
+Troubleshooting Views
+Issue: View Not Showing Expected Items
 
----
+Check filter formula syntax.
 
-## Future View Enhancements
+Confirm internal column names.
 
-As the system evolves, consider adding:
+Verify user permissions.
 
-- **Overdue Tickets View**: Filter by calculated due date
-- **SLA Breach Dashboard**: Track tickets exceeding SLA
-- **Team Performance View**: Group by Assigned To with metrics
-- **Trend Analysis View**: Tickets by created date (last 30/60/90 days)
-- **Customer Satisfaction View**: Filter by satisfaction ratings (future field)
+Ensure items actually match the filter criteria.
 
----
-More  methods
+Issue: View Performance is Slow
 
-# SharePoint – Tickets List Views
+Reduce item limit.
 
-This document describes the recommended views for operating the Tickets list efficiently.
+Index filtered columns.
 
----
+Simplify filter logic.
 
-## 1. All Tickets (Default View)
+Remove unnecessary columns from the view.
 
-**Purpose**: General overview.
+Issue: Users Can't See View
 
-- Columns:
-  - Issue
-  - Request Category
-  - Priority
-  - Status
-  - Assigned to
-  - Due Date
-  - Created
-- Sort:
-  - Created (Descending)
+Confirm view is Public, not Personal.
 
----
+Verify users have Read permission on the list.
 
-## 2. Open Tickets
+Check any audience targeting settings.
 
-**Purpose**: Active workload.
+Quick Reference: Core Operational Views
 
-- Filter:
-  - Status is not equal to `Resolved`
-  - Status is not equal to `Closed`
-- Sort:
-  - Priority (High → Low)
-  - Created (Descending)
+This is a condensed map of the most important operational views:
 
----
+All Tickets (Admin) – Full overview (Admin use).
 
-## 3. High Priority Tickets
+Open Tickets – Active workload (default for IT).
 
-**Purpose**: Incident management.
+High Priority Tickets / Dashboard – Incident management.
 
-- Filter:
-  - Priority = `High`
-  - Status ≠ `Closed`
-- Sort:
-  - Created (Descending)
+Hardware / Software / Network Team Queues – Dedicated team queues based on AssignedTo.
 
----
+My Active / My Submitted Tickets – Personal views for technicians or end users.
 
-## 4. Hardware Team Queue
+Related Documentation
 
-**Purpose**: Dedicated view for IT-Hardware.
+📘 Setup Guide
 
-- Filter:
-  - Assigned to = `IT-Hardware`
-  - Status ≠ `Closed`
+📑 Tickets List Schema
 
----
+🔐 Permissions Model
 
-## 5. Software Team Queue
+⚙️ Ticket Routing Flow (Power Automate)
 
-**Purpose**: Dedicated view for IT-Software.
+🧮 Flow Variables
 
-- Filter:
-  - Assigned to = `IT-Software`
-  - Status ≠ `Closed`
+📝 IT Request Form Template
 
----
+Last Updated: December 2024
+Version: 1.0
+Maintained By: Vidal Reñao Lopelo
 
-## 6. Network Team Queue
-
-**Purpose**: Dedicated view for IT-Network.
-
-- Filter:
-  - Assigned to = `IT-Network`
-  - Status ≠ `Closed`
-
----
-
-## 7. My Active Tickets
-
-**Purpose**: Individual workload tracking.
-
-- Filter:
-  - Assigned to contains `[Me]`
-  - Status ≠ `Closed`
-
-## Related Documentation
-
-- [SharePoint List Schema](./tickets-list-schema.json)
-- [Setup Guide](../documentation/setup-guide.md)
-- [Permissions Model](./permissions-model.md)
-
----
-
-**Last Updated**: December 2024  
-**Version**: 1.0  
-**Maintained By**: [Your Name/Team]
