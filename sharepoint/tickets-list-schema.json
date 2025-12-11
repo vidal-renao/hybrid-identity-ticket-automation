@@ -568,3 +568,74 @@
     }
   ]
 }
+
+
+
+
+more methods
+{
+  "listName": "Tickets",
+  "description": "Central repository for IT support tickets created automatically by Power Automate.",
+  "columns": [
+    {
+      "internalName": "Title",
+      "displayName": "Issue",
+      "type": "Single line of text",
+      "required": true,
+      "description": "Short summary of the IT request."
+    },
+    {
+      "internalName": "IssueDescription",
+      "displayName": "Issue description",
+      "type": "Multiple lines of text",
+      "required": true,
+      "description": "Detailed description generated from Microsoft Forms data."
+    },
+    {
+      "internalName": "RequestCategory",
+      "displayName": "Request Category",
+      "type": "Choice",
+      "choices": ["Hardware", "Software", "Network", "Other"],
+      "default": "Other",
+      "required": true
+    },
+    {
+      "internalName": "Priority",
+      "displayName": "Priority",
+      "type": "Choice",
+      "choices": ["High", "Medium", "Low"],
+      "default": "Medium",
+      "required": true
+    },
+    {
+      "internalName": "Status",
+      "displayName": "Status",
+      "type": "Choice",
+      "choices": ["New", "In Progress", "Resolved", "Closed"],
+      "default": "New",
+      "required": true
+    },
+    {
+      "internalName": "AssignedTo",
+      "displayName": "Assigned to",
+      "type": "Person or Group",
+      "allowGroups": true,
+      "required": false,
+      "description": "Microsoft 365 group responsible for resolving the ticket."
+    },
+    {
+      "internalName": "Requester",
+      "displayName": "Requester",
+      "type": "Person or Group",
+      "required": true,
+      "description": "User who submitted the request."
+    },
+    {
+      "internalName": "DueDate",
+      "displayName": "Due Date",
+      "type": "Date",
+      "required": false,
+      "description": "Requested resolution date."
+    }
+  ]
+}
