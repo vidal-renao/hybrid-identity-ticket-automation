@@ -1,8 +1,26 @@
 # SharePoint Permissions Model
 
+> 🔗 **Navigation**
+> - 🏠 [Back to main README](../README.md)
+> - 📘 [Setup Guide](../documentation/setup-guide.md)
+> - 📑 [Tickets List Schema](./tickets-list-schema.json)
+> - 👁️ [Custom Views](./custom-views.md)
+> - ⚙️ [Ticket Routing Flow (Power Automate)](../power-automate/ticket-routing-flow.json)
+> - 🧮 [Flow Variables](../power-automate/flow-variables.md)
+> - 📝 [IT Request Form Template](../forms/it-request-form-template.json)
+
+---
+
 ## Overview
 
-This document defines the security and permissions structure for the IT Support Hub SharePoint site and the Tickets list. The model follows least-privilege principles while enabling efficient collaboration.
+This document defines the **security and permissions structure** for the **IT Support Hub** SharePoint site and the **Tickets** list.  
+The model follows **least-privilege principles** while enabling efficient collaboration between IT teams and end users.
+
+This permissions model works together with:
+
+- The list structure: 👉 [Tickets List Schema](./tickets-list-schema.json)  
+- The reporting and queues: 👉 [Custom Views](./custom-views.md)  
+- The automation: 👉 [Ticket Routing Flow](../power-automate/ticket-routing-flow.json)
 
 ---
 
@@ -10,18 +28,18 @@ This document defines the security and permissions structure for the IT Support 
 
 ### Core Principles
 
-1. **Least Privilege**: Users receive only the permissions necessary for their role
-2. **Group-Based Security**: Permissions assigned to groups, not individuals
-3. **Separation of Duties**: Clear distinction between IT staff, admins, and end users
-4. **Audit Trail**: All changes tracked through SharePoint version history
-5. **Data Privacy**: Tickets may contain sensitive information requiring controlled access
+1. **Least Privilege** – Users receive only the permissions necessary for their role.  
+2. **Group-Based Security** – Permissions assigned to Microsoft 365 / Entra ID groups, not individuals.  
+3. **Separation of Duties** – Clear distinction between IT staff, admins, and end users.  
+4. **Audit Trail** – All changes tracked through SharePoint version history and audit logs.  
+5. **Data Privacy** – Tickets may contain sensitive information and must be access-controlled.
 
 ### Compliance Considerations
 
-- **GDPR**: Personal data (requester info) must be protected
-- **Data Retention**: Consider implementing retention policies
-- **Audit Requirements**: Maintain logs of who accessed/modified tickets
-- **Privacy**: End users should only see their own tickets (optional)
+- **GDPR**: Personal data (requester identity, contact details, location) must be protected.  
+- **Data Retention**: Consider retention / deletion policies for older tickets.  
+- **Audit Requirements**: Track who accessed / modified tickets.  
+- **Privacy**: Optionally restrict end users so they only see their **own** tickets.
 
 ---
 
@@ -29,30 +47,30 @@ This document defines the security and permissions structure for the IT Support 
 
 ### Standard SharePoint Permission Levels
 
-| Permission Level | Rights | Use In This Project |
-|------------------|--------|---------------------|
-| **Full Control** | Complete control | IT Admins only |
-| **Design** | Create lists/libraries, apply themes | Not used |
-| **Edit** | Add, edit, delete items and documents | Not used (too broad) |
-| **Contribute** | Add, edit, delete own items | IT Team Groups |
-| **Read** | View pages and items | End Users (optional) |
-| **Limited Access** | Access shared resources | Automatically granted |
-| **View Only** | View items (no download) | Not used |
+| Permission Level   | Rights                                 | Use In This Project                  |
+|--------------------|-----------------------------------------|--------------------------------------|
+| **Full Control**   | Complete control                       | IT Admins only                       |
+| **Design**         | Create lists/libraries, apply themes   | Not used                             |
+| **Edit**           | Add/edit/delete items and documents    | Not used (too broad)                 |
+| **Contribute**     | Add/edit/delete items                  | IT Team Groups / Flow service acct   |
+| **Read**           | View pages and items                   | End users (optional)                 |
+| **Limited Access** | Access shared resources                | Automatic                            |
+| **View Only**      | View items (no download)               | Not used                             |
 
-### Custom Permission Levels (if needed)
+### Optional Custom Permission Levels
 
-**IT Ticket Editor**
-- View Items
-- Add Items
-- Edit Items
-- Delete Items
-- View Pages
-- Create Alerts
+**IT Ticket Editor**  
+- View Items  
+- Add Items  
+- Edit Items  
+- Delete Items (own or all – configurable)  
+- View Pages  
+- Create Alerts  
 
-**IT Ticket Viewer**
-- View Items
-- View Pages
-- Create Alerts (on own items)
+**IT Ticket Viewer**  
+- View Items  
+- View Pages  
+- Create Alerts (own items / views)
 
 ---
 
@@ -60,66 +78,74 @@ This document defines the security and permissions structure for the IT Support 
 
 ### IT Support Hub Site
 
-**URL**: `https://yourtenant.sharepoint.com/sites/ITSupport`
+**URL**: `https://yourtenant.sharepoint.com/sites/ITSupport`  
+**Type**: Team Site (SharePoint Online)
 
 #### Site Collection Administrators
-```
-Role: Full administrative control
-Members:
-  - IT Manager (primary admin)
-  - SharePoint Admin (secondary)
-  - Power Platform Service Admin (for flow troubleshooting)
 
-Permissions:
-  ✅ Site Settings
-  ✅ Add/Remove Users
-  ✅ Create Lists/Libraries
-  ✅ Manage Permissions
-  ✅ Site Collection Features
-  ✅ Recycle Bin Management
-```
+**Role**: Full administrative control over the site collection.
+
+**Typical Members**:
+- IT Manager (primary admin)  
+- SharePoint Admin  
+- Power Platform Service Admin (for flow troubleshooting)  
+
+**Capabilities**:
+- ✅ Site Settings  
+- ✅ Add/Remove Users  
+- ✅ Create Lists/Libraries  
+- ✅ Manage Permissions  
+- ✅ Manage Site Collection Features  
+- ✅ Recycle Bin Management  
+
+---
 
 #### Site Owners Group
-```
-Role: Manage site content and structure
-Members:
-  - IT Manager
-  - Senior IT Staff (2-3 people)
 
-Permissions:
-  ✅ Full Control (at site level)
-  ✅ Create/delete lists
-  ✅ Manage site permissions
-  ✅ View all content
-```
+**Role**: Manage site content and structure.
+
+**Members**:
+- IT Manager  
+- Senior IT Staff (2–3 people)  
+
+**Permissions**:
+- ✅ Full Control (site level)  
+- ✅ Create/delete lists  
+- ✅ Manage site permissions  
+- ✅ View all content  
+
+---
 
 #### Site Members Group
-```
-Role: Contribute to site content
-Members:
-  - All IT Staff Groups:
-    • IT-ServiceDesk
-    • IT-Hardware
-    • IT-Software
-    • IT-Network
 
-Permissions:
-  ✅ Contribute (inherited to lists by default)
-  ⚠️ Override on Tickets list (see below)
-```
+**Role**: Contribute to site content.
+
+**Members**:
+- All IT Staff Groups:
+  - IT-ServiceDesk  
+  - IT-Hardware  
+  - IT-Software  
+  - IT-Network  
+
+**Permissions**:
+- ✅ Contribute (by default)  
+- ⚠️ Overridden on **Tickets** list (see below).
+
+---
 
 #### Site Visitors Group
-```
-Role: Read-only access to site
-Members:
-  - All Company (optional)
-  - Specific end-user groups (if needed)
 
-Permissions:
-  ✅ Read
-  ❌ No edit capabilities
-  ⚠️ Consider security implications before adding
-```
+**Role**: Read-only access (if needed).
+
+**Members**:
+- All Company (optional)  
+- Specific end-user groups  
+
+**Permissions**:
+- ✅ Read  
+- ❌ No edit capabilities  
+
+> ⚠️ If the Tickets list contains sensitive info, do **not** expose it to everyone via the site Visitors group. Control at list level instead.
 
 ---
 
@@ -127,587 +153,432 @@ Permissions:
 
 ### Permission Inheritance
 
-**Break Inheritance**: YES  
-**Reason**: Default site permissions are too broad for sensitive ticket data
+- **Inheritance**: ❌ **Broken** (Stop inheriting from site)  
+- **Reason**: Default site permissions are often too broad for sensitive ticket data.
 
-### Tickets List Permissions
+---
+
+### Tickets List – Roles & Permissions
 
 #### Admins: Full Control
-```
-Principal: IT Admin Group (or specific admin accounts)
-Permission Level: Full Control
 
-What they can do:
-  ✅ Manage list settings
-  ✅ Create/delete columns
-  ✅ Manage views
-  ✅ Export all data
-  ✅ Delete any item
-  ✅ Manage permissions
-  ✅ Access version history
+**Principal**: IT Admin Group (or specific admin accounts)  
+**Permission Level**: Full Control  
 
-Assigned To:
-  - IT Manager
-  - SharePoint Administrator
-```
+**Capabilities**:
+- ✅ Manage list settings  
+- ✅ Create/delete columns  
+- ✅ Manage views  
+- ✅ Export all data  
+- ✅ Delete any item  
+- ✅ Manage permissions  
+- ✅ Access version history  
+
+Assigned to:
+- IT Manager  
+- SharePoint Administrator  
+
+---
 
 #### IT Staff Groups: Contribute
-```
-Principal: 
-  - IT-ServiceDesk
-  - IT-Hardware
-  - IT-Software
-  - IT-Network
 
-Permission Level: Contribute (with modifications)
+**Principal**:
+- IT-ServiceDesk  
+- IT-Hardware  
+- IT-Software  
+- IT-Network  
 
-What they can do:
-  ✅ View all tickets
-  ✅ Add new tickets (if needed)
-  ✅ Edit all tickets (update status, add notes)
-  ✅ Delete tickets they created
-  ✅ Create personal views
-  ✅ Set alerts
-  ❌ Delete tickets created by automation/others
-  ❌ Manage list settings
-  ❌ Change permissions
+**Permission Level**: Contribute (with item-level configuration)
 
-Configuration:
-  List Settings → Advanced Settings → Item-level Permissions:
-    Read: All items
-    Create: Create items
-    Edit: All items
-    Delete: Own items only
-```
+**Capabilities**:
+- ✅ View all tickets  
+- ✅ Add new tickets (if needed)  
+- ✅ Edit tickets (update status, notes, fields)  
+- ✅ Delete tickets they created  
+- ✅ Create personal views  
+- ✅ Set alerts  
+- ❌ Manage list settings  
+- ❌ Change permissions  
 
-#### End Users: Read (Optional)
-```
-Principal: All Company or Authenticated Users
-Permission Level: Read (with restrictions)
+**Recommended Item-Level Settings** (Advanced Settings on list):
 
-What they can do:
-  ✅ View tickets (only their own, via filtered view)
-  ✅ Create alerts on their tickets
-  ❌ Edit any tickets
-  ❌ Delete tickets
-  ❌ View other users' tickets (enforced by view filters)
+```text
+Read access:
+  Read all items
 
-Configuration:
-  Only enable if business requires users to see their ticket status
-  Alternative: Use Power Apps portal or email notifications instead
-```
+Create and Edit access:
+  Create and edit all items
 
-#### Power Automate Service Account: Contribute
-```
-Principal: Power Automate (automatic)
+Delete access:
+  Delete items that were created by the user
+
+
+End Users: Read (Optional)
+
+Principal: All Company / specific department groups
+Permission Level: Read (if enabled)
+
+Capabilities:
+
+✅ View their own tickets via filtered view (e.g., “My Submitted Tickets”)
+
+✅ Create alerts on their own tickets
+
+❌ Edit tickets
+
+❌ Delete tickets
+
+❌ View other users’ tickets (enforced via view filters + design)
+
+💡 Alternative:
+Don’t give direct access to the list. Users interact only via Forms + email notifications, or via a Power Apps front-end.
+
+Power Automate Service Account: Contribute
+
+Principal: Flow connection owner or dedicated service account
 Permission Level: Contribute
 
 What it does:
-  ✅ Create new ticket items
-  ✅ Update existing tickets (if flow includes updates)
-  ✅ Read ticket data for conditions
+
+✅ Create new ticket items
+
+✅ Update ticket fields (if flow includes updates)
+
+✅ Read ticket data for conditions & routing
 
 Notes:
-  - Automatically granted when flow runs
-  - Appears as "Created By" on automated tickets
-  - Uses app-only authentication
-```
 
----
+This account will appear in Created By / Modified By columns for automated actions.
 
-## Item-Level Security
+Make sure it has at least Contribute on the Tickets list.
 
-### Recommended Configuration
+Item-Level Security
+Recommended Configuration
 
-**List Settings → Advanced Settings → Item-level Permissions**:
+From List Settings → Advanced Settings → Item-level Permissions:
 
-```
 Read access:
-  ○ Read all items
-  ● Read items that were created by the user
-  (Choose based on privacy requirements)
+  Option A (IT-only visibility): Read all items
+  Option B (privacy per user):   Read items that were created by the user
 
 Create and Edit access:
-  ● Create items and edit items that were created by the user
-  ○ Create and edit all items
-  (IT staff need "all items", but end users only their own)
+  IT Staff:    Create and edit all items
+  End Users:   [No direct access or Read only]
 
 Delete access:
-  ● None
-  ○ Own items
-  ○ All items
-  (Typically: IT staff = Own items, Admins = All items)
-```
+  IT Staff:    Own items only (Admins can delete all)
+  End Users:   None
 
-### Custom Item-Level Permissions (Advanced)
 
-If stricter security is needed:
+✅ For this lab/project, the recommended model is:
 
-**Option A: IT Staff See Only Their Team's Tickets**
-- Use SharePoint audience targeting
-- Each team sees only tickets assigned to their group
-- Requires: Breaking inheritance on each item (complex)
-- **Not recommended** for this project (reduces flexibility)
+IT teams: See and edit all items
 
-**Option B: Role-Based Views**
-- All staff see all tickets (Contribute permission)
-- Views filtered by assigned group
-- Simpler to manage
-- **Recommended approach**
+End users: No direct access OR view only their own tickets via filtered view
 
----
+Advanced Options (Not Required for Lab)
 
-## Permission Assignment Process
+Option A – Team-Isolated Tickets
 
-### Step-by-Step Setup
+Break permission inheritance per item.
 
-#### 1. Create Security Groups (Entra ID)
+Grant access only to the AssignedGroup (IT-Hardware, IT-Software, etc.).
 
-Already created in Phase 1:
-- IT-ServiceDesk
-- IT-Hardware
-- IT-Software
-- IT-Network
+Pros: Maximum isolation.
 
-#### 2. Configure Site Permissions
+Cons: Very complex to maintain, not recommended for most ITSM-style setups.
 
-```powershell
-# PowerShell example (PnP)
+Option B – Role-Based Views (Recommended)
+
+All IT staff see all tickets.
+
+Use views filtered by Assigned To / AssignedGroup.
+
+Simple, transparent, easy to manage.
+
+Permission Assignment Process
+1. Create Security Groups (Entra ID)
+
+Already covered conceptually in the architecture:
+
+IT-ServiceDesk
+
+IT-Hardware
+
+IT-Software
+
+IT-Network
+
+(These are used by:
+
+Automation → routing logic
+
+SharePoint → Assigned To & permissions
+
+Teams/Outlook → notifications)
+
+2. Configure Site Permissions (PnP Example)
 Connect-PnPOnline -Url "https://yourtenant.sharepoint.com/sites/ITSupport" -Interactive
 
-# Add IT Admin to Site Collection Admins
+# Add IT Admin as Site Collection Admin
 Add-PnPSiteCollectionAdmin -Owners "admin@yourtenant.com"
 
-# Add IT groups to site with Contribute
-Add-PnPGroupMember -Group "Site Members" -LoginName "IT-ServiceDesk@yourtenant.com"
-Add-PnPGroupMember -Group "Site Members" -LoginName "IT-Hardware@yourtenant.com"
-Add-PnPGroupMember -Group "Site Members" -LoginName "IT-Software@yourtenant.com"
-Add-PnPGroupMember -Group "Site Members" -LoginName "IT-Network@yourtenant.com"
-```
+# Add IT groups to Site Members
+Add-PnPGroupMember -Group "IT Support Hub Members" -LoginName "IT-ServiceDesk@yourtenant.com"
+Add-PnPGroupMember -Group "IT Support Hub Members" -LoginName "IT-Hardware@yourtenant.com"
+Add-PnPGroupMember -Group "IT Support Hub Members" -LoginName "IT-Software@yourtenant.com"
+Add-PnPGroupMember -Group "IT Support Hub Members" -LoginName "IT-Network@yourtenant.com"
 
-#### 3. Break Inheritance on Tickets List
+
+(Group names may differ based on your tenant configuration.)
+
+3. Break Inheritance on Tickets List
 
 Via UI:
-1. Go to Tickets list
-2. Click **Settings** (gear) → **List settings**
-3. Click **Permissions for this list**
-4. Click **Stop Inheriting Permissions**
-5. Confirm
+
+Go to Tickets list
+
+Click Settings (gear) → List settings
+
+Click Permissions for this list
+
+Click Stop Inheriting Permissions
+
+Confirm
 
 Via PowerShell:
-```powershell
+
 Set-PnPList -Identity "Tickets" -BreakRoleInheritance -CopyRoleAssignments
-```
 
-#### 4. Assign Permissions to Tickets List
-
-```powershell
+4. Assign Permissions on Tickets List
 # Grant IT groups Contribute on Tickets list
 Set-PnPListPermission -Identity "Tickets" -Group "IT-ServiceDesk" -AddRole "Contribute"
-Set-PnPListPermission -Identity "Tickets" -Group "IT-Hardware" -AddRole "Contribute"
-Set-PnPListPermission -Identity "Tickets" -Group "IT-Software" -AddRole "Contribute"
-Set-PnPListPermission -Identity "Tickets" -Group "IT-Network" -AddRole "Contribute"
+Set-PnPListPermission -Identity "Tickets" -Group "IT-Hardware"  -AddRole "Contribute"
+Set-PnPListPermission -Identity "Tickets" -Group "IT-Software"  -AddRole "Contribute"
+Set-PnPListPermission -Identity "Tickets" -Group "IT-Network"   -AddRole "Contribute"
 
-# Remove default Members group if too broad
-Set-PnPListPermission -Identity "Tickets" -Group "Site Members" -RemoveRole "Edit"
-```
+# Optional: Remove broad permissions (e.g., Site Members if too wide)
+Set-PnPListPermission -Identity "Tickets" -Group "IT Support Hub Members" -RemoveRole "Edit"
 
-#### 5. Configure Item-Level Permissions
+5. Configure Item-Level Permissions
 
 Via UI:
-1. Tickets list → **Settings** → **List settings**
-2. **Advanced settings**
-3. Under "Item-level Permissions":
-   - Read: **Read all items**
-   - Create/Edit: **Create and edit all items** (for IT staff)
-4. Click **OK**
 
----
+Tickets list → Settings → List settings
 
-## Special Permissions Scenarios
+Click Advanced settings
 
-### Scenario 1: Manager Needs to See All Tickets But Not Edit
+Under Item-level Permissions:
 
-**Solution**:
-```
-Create custom permission level: "IT Viewer"
-  - View Items
-  - View Pages
-  - Create Alerts
-  - Export to Excel
+Read access: Read all items (for IT teams)
 
-Assign to: Managers Group
-```
+Create and Edit: Create and edit all items (for IT teams)
 
-### Scenario 2: Audit/Compliance Team Needs Read-Only Access
+Click OK
 
-**Solution**:
-```
-Permission Level: Read
-Principal: Audit-Team group
-Scope: Tickets list only (break inheritance)
-Duration: Temporary (if needed)
-```
+If end users are allowed to access the list directly, combine this with views filtered by [Requester] = [Me].
 
-### Scenario 3: External Consultant Needs Limited Access
+Special Permissions Scenarios
+Scenario 1 – Manager Needs Read-Only Access to All Tickets
 
-**Solution**:
-```
-Create: Guest user in Entra ID
-Add to: Specific time-bound security group
-Permission: Read on specific view only
-Expire: Set Azure AD access review
-```
+Solution:
 
-### Scenario 4: User Wants to See Their Own Tickets
+Create group: IT-Managers-ViewOnly
 
-**Solution**:
-```
-Option A: Create personal view with [Me] filter
-  - No additional permissions needed
-  - User creates their own view
+Assign Read permission on Tickets list.
 
-Option B: Create public "My Tickets" view
-  - Filter: Requester = [Me]
-  - Grant Read permission to all users
-  - Ensures they only see their own data
-```
+Optional: Add a dedicated view with aggregated metrics.
 
----
+Scenario 2 – Audit / Compliance Team
 
-## Permission Verification
+Solution:
 
-### Testing Checklist
+Create group: IT-Audit
 
-Test with accounts from each role:
+Grant Read on Tickets list.
 
-#### IT Admin Account
-```
+Use Audit logs and Export to Excel / Power BI for review.
+
+Scenario 3 – External Consultant (Temporary Access)
+
+Solution:
+
+Create Guest user account in Entra ID.
+
+Add to a dedicated group with Read on Tickets.
+
+Set Access Review / expiry for that account.
+
+Scenario 4 – End Users Viewing Their Own Tickets
+
+Option A – Views Only
+
+Give end users Read on Tickets list.
+
+Create view: My Submitted Tickets with filter: [Requester] = [Me].
+
+Users cannot edit tickets but can monitor status.
+
+Option B – No Direct Access (Recommended for strict setups)
+
+No list access for end users.
+
+Users are informed via:
+
+Email notifications (from Power Automate)
+
+Optional Power Apps front-end
+
+Permission Verification
+Test Matrix
+IT Admin
 □ Can access list settings
+□ Can manage columns and views
 □ Can create/edit/delete any ticket
-□ Can manage permissions
-□ Can export all data
-□ Can see all views
-```
+□ Can manage permissions on list
+□ Can export tickets (Excel / Power BI)
 
-#### IT Staff Account (e.g., Hardware Team Member)
-```
+IT Staff (e.g., Hardware Team)
 □ Can view all tickets
-□ Can edit ticket status and notes
-□ Can create new tickets
-□ Can delete only tickets they created
-□ Cannot access list settings
-□ Can create personal views
-```
+□ Can edit ticket fields (status, notes, etc.)
+□ Can create new tickets (if allowed)
+□ Can delete only own tickets
+□ Cannot change list settings
+□ Cannot manage permissions
 
-#### End User Account
-```
-□ Can access form to submit tickets
-□ Can view their own submitted tickets (if Read granted)
-□ Cannot view other users' tickets
-□ Cannot edit any tickets
-□ Cannot access list directly (unless Read granted)
-```
+End User
+□ Can submit tickets via Microsoft Forms
+□ Can view only their own tickets (if Read access is enabled)
+□ Cannot edit or delete tickets
+□ Cannot see other users' data
 
-#### Power Automate
-```
+Power Automate
 □ Flow can create new tickets
-□ Flow can update ticket fields
-□ Items show "Created by" as service account
-□ No permission errors in flow history
-```
+□ Flow can update ticket fields (if designed to do so)
+□ No "Access Denied" errors in flow history
 
----
+Troubleshooting Permissions
+IT Staff Can’t Edit Tickets
 
-## Troubleshooting Permissions
+Possible Causes:
 
-### Common Issues
+Incorrect permission level (e.g., Read instead of Contribute)
 
-#### Issue: IT Staff Can't Edit Tickets
+Item-level permissions too restrictive
 
-**Cause**: Insufficient permissions or item-level restrictions  
-**Solution**:
-1. Verify group has Contribute permission
-2. Check item-level permissions: Should be "Edit all items"
-3. Confirm user is member of IT group in Entra ID
+Fix:
 
-#### Issue: Power Automate Flow Fails with "Access Denied"
+Verify list permissions for IT group.
 
-**Cause**: Service account lacks permissions  
-**Solution**:
-1. Ensure flow connection uses correct account
-2. Grant that account Contribute on Tickets list
-3. Check site collection app catalog permissions
-4. Re-save flow to refresh permissions
+Check Advanced Settings → Item-level Permissions.
 
-#### Issue: Users See "You don't have permission to view this list"
+Power Automate Fails with “Access Denied”
 
-**Cause**: No Read permission or broken inheritance  
-**Solution**:
-1. Grant Read to appropriate group (if intended)
-2. Check if inheritance is broken correctly
-3. Verify user is authenticated (not anonymous)
+Possible Causes:
 
-#### Issue: Users See All Tickets Instead of Filtered View
+Flow connection uses an account without permissions.
 
-**Cause**: View filter not working or permissions too broad  
-**Solution**:
-1. Verify view filter syntax: `[Requester] = [Me]`
-2. Check that view is saved correctly
-3. Test with different user account
+Fix:
 
----
+Open flow → check connections.
 
-## Auditing & Compliance
+Ensure connection owner has Contribute on Tickets list.
 
-### Audit Logging
+Re-authenticate connection if needed.
 
-**Enable**: SharePoint Audit Logs
-```
-Settings → Site Settings → Site Collection Administration → Audit Settings
+End Users See “You Don’t Have Permission”
 
-Enable:
-  ✅ Editing items
-  ✅ Deleting items
-  ✅ Viewing items
-  ✅ Editing content types and columns
-  ✅ Searching site content
-```
+Possible Causes:
 
-**Review Logs**:
-- **Security & Compliance Center** → **Audit log search**
-- Filter by: Site, List, User, Date range
-- Export to CSV for analysis
+No Read access, or list-level inheritance incorrect.
 
-### Permission Reviews
+Fix:
 
-**Schedule**: Quarterly
+Confirm if they should have access.
 
-**Review Process**:
-1. Export current permissions: `Get-PnPListPermissions -Identity "Tickets"`
-2. Compare with documented roles
-3. Remove inactive users
-4. Verify group memberships in Entra ID
-5. Document any exceptions
+If yes → grant Read to appropriate group.
 
-**Checklist**:
-```
+If no → Forms + email-only model is correct.
+
+Users See All Tickets Instead of Just Their Own
+
+Possible Causes:
+
+View filter not configured properly.
+
+Fix:
+
+Ensure filter is: [Requester] = [Me].
+
+Confirm view is saved and users are using that view.
+
+Auditing & Compliance
+Audit Logging
+
+Enable audit logging at site / tenant level:
+
+Track:
+
+View item
+
+Edit item
+
+Delete item
+
+Permission changes
+
+Use Microsoft Purview / Compliance Center to query audit logs.
+
+Periodic Permission Review
+
+Frequency: Quarterly
+
+Checklist:
+
 □ Site Collection Admins still valid
-□ IT group memberships current
-□ No individual user permissions (should use groups)
-□ No overly permissive access
-□ Guest accounts still needed
+□ Group memberships reviewed (IT-ServiceDesk, IT-Hardware, etc.)
+□ No direct permissions to individual users on Tickets list
+□ Guest users still required (or removed)
 □ Audit logs enabled and reviewed
-```
+□ No overly broad groups with high privileges
 
----
+Best Practices
+Do ✅
 
-## Best Practices
+Use groups, not individual accounts.
 
-### Do's ✅
+Follow least privilege at all levels.
 
-- Use groups for permissions, never individual users
-- Follow least privilege principle
-- Document all permission exceptions
-- Regularly review and audit permissions
-- Use descriptive group names
-- Test permissions with different accounts
-- Enable audit logging
-- Break inheritance only when necessary
+Document exceptions and temporary access.
 
-### Don'ts ❌
+Test permissions with test accounts.
 
-- Don't grant Full Control to regular IT staff
-- Don't assign permissions to individual users
-- Don't forget to test after permission changes
-- Don't ignore "Access Denied" errors without investigation
-- Don't share sensitive data through public views
-- Don't disable audit logging
-- Don't use "Everyone" or "All Users" groups casually
+Combine permissions with Custom Views for usability.
 
----
+Don’t ❌
 
-## Permission Changes Workflow
+Don’t grant Full Control to regular staff.
 
-### Requesting Permission Changes
+Don’t use Everyone / All Users casually.
 
-**Process**:
-1. **Request**: Submit ticket or email to IT Admin
-2. **Justification**: Explain business need
-3. **Approval**: Manager approval required
-4. **Implementation**: IT Admin makes change
-5. **Documentation**: Update this document
-6. **Notification**: Inform requester
-7. **Review**: Schedule removal date if temporary
+Don’t ignore “Access Denied” errors in flows.
 
-**Form Template**:
-```
-Permission Change Request
+Don’t leave guest / external accounts with permanent access.
 
-Requested By: [Name]
-Date: [Date]
-Type: Add / Remove / Modify
-Scope: Site / List / Item
-Principal: [User or Group]
-Permission Level: [Full Control / Contribute / Read / Custom]
-Business Justification: [Explain why needed]
-Duration: Permanent / Temporary (until [date])
-Manager Approval: [Yes/No] - [Manager Name]
-```
+Related Documentation
 
----
+📘 Setup Guide
 
+📑 Tickets List Schema
 
+👁️ Custom Views
 
-# Other Methods
-# SharePoint – Permissions Model (Tickets Management)
+⚙️ Ticket Routing Flow (Power Automate)
 
-This document describes the permission model applied to the **Tickets** SharePoint list
-used as the backend for automated IT ticket management.
+🧮 Flow Variables
 
-The model follows **enterprise best practices**:
-- Least privilege
-- Group-based access
-- No individual user permissions
-- Clear separation of responsibilities
+📝 IT Request Form Template
 
----
-
-## 1. Design Principles
-
-The permission model is based on the following principles:
-
-- ✅ Access is granted via **Microsoft 365 groups**, not individual users
-- ✅ Power Automate operates with explicit permissions
-- ✅ End users do not manage tickets directly
-- ✅ IT teams have controlled write access
-- ✅ The model is auditable and scalable
-
----
-
-## 2. SharePoint Site Level Permissions
-
-**Site name**: IT Operations  
-**Site type**: Team Site (SharePoint Online)
-
-| Role / Group | Permission Level | Description |
-|-------------|------------------|-------------|
-| IT-Admins | Full Control | Site administration, list configuration, security |
-| IT-ServiceDesk | Edit | Ticket triage and coordination |
-| IT-Hardware | Edit | Hardware ticket handling |
-| IT-Software | Edit | Software ticket handling |
-| IT-Network | Edit | Network and VPN ticket handling |
-| End Users (optional) | Read | View-only access if required |
-
-> 🔒 In many environments, end users do not have access to the Tickets list at all.
-> Ticket interaction is handled exclusively by IT.
-
----
-
-## 3. Tickets List Level Permissions
-
-### 3.1 Inheritance Strategy
-
-- ✅ **Permissions are inherited** from the site
-- ❌ No custom list-level permissions unless required
-
-This simplifies management and reduces configuration errors.
-
----
-
-### 3.2 Power Automate Permissions
-
-Power Automate creates items in the Tickets list using:
-
-- The **connection owner account**
-- Or a **dedicated service account** (recommended in production)
-
-Required permissions:
-- **Contribute** on the Tickets list
-
-> ⚠️ The Power Automate account must also have permission to resolve:
-> - Users
-> - Microsoft 365 groups  
-> when populating the **Assigned to** field.
-
----
-
-## 4. Assignment Model (Critical Concept)
-
-Tickets are **never assigned to individual users**.
-
-Instead:
-- The **Assigned to** field allows **Microsoft 365 groups**
-- Groups represent **functional IT teams**
-
-### Groups used for assignment
-
-| Group | Purpose |
-|-----|--------|
-| IT-ServiceDesk | Default intake and triage |
-| IT-Hardware | Hardware-related issues |
-| IT-Software | Software & licensing |
-| IT-Network | Network & connectivity |
-
-### Benefits
-
-- Scalability
-- No hardcoded users in flows
-- Easy onboarding / offboarding
-- Clear responsibility ownership
-- Accurate workload distribution
-
----
-
-## 5. Visibility & Workload Management
-
-### 5.1 Team Views
-
-Each IT group has a dedicated SharePoint view filtered by:
-- Assigned to = Group
-- Status ≠ Closed
-
-This allows teams to:
-- See only relevant tickets
-- Avoid noise from other queues
-
----
-
-### 5.2 Individual Workload
-
-The **"My Active Tickets"** view uses:
-
-
-
-## Related Documentation
-
-- [Setup Guide](../documentation/setup-guide.md)
-- [SharePoint List Schema](./tickets-list-schema.json)
-- [Custom Views](./custom-views.md)
-
----
-
-## Appendix: Permission Level Definitions
-
-### Full Control
-- **Base Permissions**: All permissions
-- **Description**: Complete control over the site
-
-### Contribute
-- **Base Permissions**: View, Add, Edit, Delete items; View pages
-- **Description**: Add, edit, and delete list items and documents
-
-### Read
-- **Base Permissions**: View pages and items; Open items and documents
-- **Description**: View-only access to content
-
-### Limited Access
-- **Base Permissions**: Access specific lists, libraries, or items
-- **Description**: Automatically assigned when user needs access to specific resource
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: December 2024  
-**Reviewed By**: IT Manager  
-**Next Review Date**: March 2025
+Document Version: 1.0
+Last Updated: December 2024
+Maintained By: Vidal Reñao Lopelo
