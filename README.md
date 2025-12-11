@@ -7,271 +7,238 @@
 ![PowerAutomate](https://img.shields.io/badge/Power%20Automate-Flow%20Enabled-purple)
 ![SharePoint](https://img.shields.io/badge/SharePoint-Ticketing%20Backend-green)
 
-This repository contains a full end-to-end implementation of a **hybrid identity lab** and an **enterprise IT ticket automation system**, built using the Microsoft 365 ecosystem:
+This repository contains a full end-to-end implementation of a **Hybrid Identity lab** and an **enterprise IT ticket automation system**, built using Microsoft 365:
 
-- Microsoft Entra ID (Azure AD)
-- Active Directory (on-prem, optional)
-- Azure AD Connect / Entra Connect
-- Microsoft Forms
-- Power Automate
-- SharePoint Online
-- Microsoft 365 Groups
+- Microsoft Entra ID (Azure AD)  
+- Active Directory (optional, hybrid identity)  
+- Azure AD Connect / Entra Connect  
+- Microsoft Forms  
+- Power Automate  
+- SharePoint Online  
+- Microsoft 365 Groups  
 
-The project demonstrates how organizations can **automate IT Operations**, reduce manual workload, improve service delivery, and create scalable support structures aligned with **ITIL** and **modern workplace engineering**.
+The project demonstrates how organizations can **automate IT Operations**, reduce manual workload, and create scalable support structures aligned with **ITIL** and **modern workplace engineering**.
 
 ---
 
 # 📌 Key Features
 
 ## 🔐 Hybrid Identity Architecture (AD + Entra ID)
-- Support for **cloud-only** and **synchronized on-prem** identities  
-- Unified authentication model for automation  
-- Role-based access using Microsoft 365 groups  
-- IT teams aligned with functional responsibilities
+- Supports **cloud-only** + **synchronized on-prem AD**  
+- Unified authentication for automation workflows  
+- Group-based team assignment  
+- Identity lifecycle aligned with enterprise IAM  
 
 ---
 
 ## 📝 Standardized Request Intake (Microsoft Forms)
-A single controlled entry point for all IT requests, including:
+Centralized IT request intake using a Microsoft Form.
 
-- Full Name / Corporate Email (identity binding)
-- Department
-- **Request Category** (Hardware / Software / Network / Other)
-- Detailed description
-- Priority selection
-- Required-by date
-- Optional attachments
+➡️ **Form Template:**  
+📄 [it-request-form-template.json](forms/it-request-form-template.json)
 
-Ensures **data consistency**, **auditable submissions**, and **support readiness**.
+Form inputs include:
+
+- Full Name  
+- Corporate Email  
+- Department  
+- Device Type / Category  
+- Reason for Request  
+- Priority  
+- Required-by date  
+- Attachments  
 
 ---
 
 ## ⚙️ Automated Ticket Routing (Power Automate)
-Zero-touch ticket creation and assignment.
 
-### Routing Logic:
+Zero-touch ticket creation and assignment using dynamic routing.
+
+➡️ **Power Automate Flow:**  
+📄 [ticket-routing-flow.json](power-automate/ticket-routing-flow.json)
+
+➡️ **Flow Variable Docs:**  
+📄 [flow-variables.md](power-automate/flow-variables.md)
+
+### Logic:
 ```text
-IF RequestCategory contains "Hardware" → IT-Hardware
-ELSE IF RequestCategory contains "Software" → IT-Software
-ELSE IF RequestCategory contains "Network" → IT-Network
-ELSE → IT-ServiceDesk (default triage)
+IF Category contains "Hardware" → IT-Hardware  
+IF Category contains "Software" → IT-Software  
+IF Category contains "Network" → IT-Network  
+ELSE → IT-ServiceDesk (default)
 
+Includes:
 
+Conditional branching
 
-### Automation Capabilities:
-- Conditional routing using `contains`  
-- Email notifications (HTML capable)  
-- Safe default routing  
-- Clear audit logs and traceability  
-- Group assignment using `AssignedToClaims`  
+HTML email notifications
 
----
+SharePoint integration
 
-## 📁 SharePoint Ticket Backend (ITSM Core)
+Identity-driven assignment
 
-A structured SharePoint list named `Tickets`, featuring:
+Default fail-safe routing
 
-- Issue title  
-- Auto-generated issue description  
-- Priority (Low / Medium / High)  
-- Status (New → In Progress → Resolved → Closed)  
-- Request Category  
-- Assigned Team (M365 Group)  
-- Requester identity  
-- Due Date  
+📁 SharePoint Ticket Backend (ITSM Core)
 
-### Team Dashboards
-- Hardware queue  
-- Software queue  
-- Network queue  
-- High Priority dashboard  
-- My Active Tickets  
+➡️ Ticket List Schema:
+📄 tickets-list-schema.json
 
----
+➡️ Custom Views:
+📄 custom-views.md
 
-# 🧩 Architecture Diagram
+➡️ Permissions Model:
+📄 permissions-model.md
 
+Features:
 
-User → Microsoft Forms → Power Automate → SharePoint Tickets List
-| | ↓
-Identity: Entra ID | Team Assignment (M365 Groups)
-| ↓
-(Optional) AD Sync Email Notifications → Requester + IT Teams
+Issue title
 
+Description generated from Form
 
+Status (New → In Progress → Completed → Closed)
 
-Full diagrams available in:
+Priority
 
-documentation/architecture-diagram.png
-documentation/flow-logic-diagram.png
+Request Category
 
+Assigned Team
 
+Due date
 
----
+Complete audit trail
 
-# 🚀 Quick Start Guide
+🧩 Architecture Diagrams
+Architecture Overview
 
-1️⃣ Configure **Microsoft Entra ID** and synchronize on-prem AD (optional)  
-2️⃣ Create Microsoft 365 groups:
-- IT-ServiceDesk  
-- IT-Hardware  
-- IT-Software  
-- IT-Network  
+🖼 architecture-diagram.png
 
-3️⃣ Deploy the SharePoint **Tickets** list  
-4️⃣ Create the Microsoft Form using the template  
-5️⃣ Build the Power Automate flow  
-6️⃣ Test full workflow end-to-end  
+Flow Logic Diagram
 
-📘 Detailed implementation guide:  
-➡ `documentation/setup-guide.md`
+🖼 flow-logic-diagram.png
 
----
+Setup Guide
 
-# 📂 Repository Structure
+📘 setup-guide.md
 
-├── documentation/
-│ ├── setup-guide.md
-│ ├── architecture-diagram.png
-│ └── flow-logic-diagram.png
-│
-├── power-automate/
-│ ├── ticket-routing-flow.json
-│ └── flow-variables.md
-│
-├── sharepoint/
-│ ├── tickets-list-schema.json
-│ ├── custom-views.md
-│ └── permissions-model.md
-│
-├── forms/
-│ └── it-request-form-template.json
-│
-└── screenshots/
-└── (implementation screenshots)
+🚀 Quick Start Guide
 
+1️⃣ Prepare Hybrid Identity (Optional AD sync)
+2️⃣ Create Microsoft 365 Groups (IT teams)
+3️⃣ Deploy SharePoint Tickets list
+4️⃣ Import Microsoft Form
+5️⃣ Import Power Automate Flow
+6️⃣ Validate full workflow end-to-end
 
+📘 Full instructions:
+➡️ setup-guide.md
 
----
+📂 Repository Structure (Clickable)
+📁 documentation/
 
-# 💼 Business Value
+📘 setup-guide.md
 
-| Challenge | Solution |
-|-----------|----------|
-| Scattered requests via email | Centralized SharePoint ticketing |
-| Manual assignment by ServiceDesk | Automated routing by category |
-| No visibility over workload | Team-based dashboards |
-| Dependency on specific staff | Group-based assignment |
-| Lack of audit trail | SharePoint versioning + flow history |
+🖼 architecture-diagram.png
 
-### Impact:
-- **60% reduction** in manual overhead  
-- **Instant routing** (<1 second)  
-- **100% traceability**  
-- Fully **scalable across teams**  
+🖼 flow-logic-diagram.png
 
----
+📁 power-automate/
 
-# 🛠️ Technology Stack
+🔄 ticket-routing-flow.json
 
-| Technology | Purpose |
-|-----------|----------|
-| Microsoft Entra ID | Identity platform |
-| Active Directory | On-prem identity source |
-| Azure AD Connect | Hybrid identity sync |
-| Microsoft Forms | Ticket intake interface |
-| Power Automate | Workflow automation |
-| SharePoint Online | Ticket backend |
-| Exchange Online | Notifications |
-| Microsoft 365 Groups | Team assignment |
+🧩 flow-variables.md
 
----
+📁 sharepoint/
 
-# 📊 Routing Logic (Visual)
+📄 tickets-list-schema.json
 
+📄 custom-views.md
 
-Form submission
-↓
-Evaluate Request Category
-↓
-Set variable: varAssignedToEmail
-↓
-Create SharePoint ticket
-↓
-Send confirmation email to user
-↓
-Notify assigned IT Group
+🔐 permissions-model.md
 
+📁 forms/
 
+📄 it-request-form-template.json
 
+📁 screenshots/
 
----
+🖼 entra-id-groups.png
 
-# 🎓 Skills Demonstrated
+🖼 power-automate-flow.png
 
-### Identity & Access Management
-- Hybrid identity architecture (AD → Entra ID)  
-- Azure AD Connect configuration  
-- Group-Based Access Control  
-- Security & governance principles  
+🖼 sharepoint-dashboard.png
 
-### Automation Engineering
-- Power Automate flow design  
-- Conditional branching and routing  
-- Multi-system integrations  
-- Error handling and fallbacks  
+💼 Business Value
+Challenge	Solution
+Requests arrive by email	Centralized SharePoint Ticketing
+Manual assignment	Automated routing engine
+No visibility	Dashboards + Views
+Ticket bottlenecks	Group-based assignment
+No audit trail	SharePoint versioning + flow logs
+🛠️ Technology Stack
+Technology	Purpose
+Microsoft Entra ID	Identity & RBAC
+Active Directory	On-prem identity
+Entra Connect	Sync engine
+Microsoft Forms	Intake frontend
+Power Automate	Automation
+SharePoint Online	Ticket backend
+Exchange Online	Notifications
+Microsoft 365 Groups	Team routing
+🎓 Skills Demonstrated
 
-### ITSM & Operations
-- Ticket lifecycle design  
-- Categorization and prioritization  
-- Team assignment models (ITIL-aligned)  
+Identity & Access Management
 
-### Microsoft 365 Cloud
-- SharePoint list engineering  
-- Power Platform development  
-- Exchange Online automation  
+Cloud & Hybrid Identity Architecture
 
----
+Automation with Power Automate
 
-# 🔮 Future Enhancements (Roadmap)
+SharePoint engineering
 
-- [ ] SLA-based escalations  
-- [ ] Teams integration (channels + adaptive cards)  
-- [ ] Power BI reporting dashboards  
-- [ ] AI Builder category detection  
-- [ ] Approval workflows  
-- [ ] Mobile Power App for technicians  
+ITSM workflow design
 
----
+Routing engines
 
-# 👤 Author
+Modern Workplace deployment
 
-**Vidal Reñao Lopelo**  
-Cloud & IT Infrastructure Engineer  
+Documentation & engineering best practices
 
-📧 Email: **vidal-31@hotmail.com**  
-🔗 LinkedIn: **https://www.linkedin.com/in/vidalrenao**  
-🐙 GitHub: **https://github.com/vidal-renao**  
+🔮 Roadmap
 
----
+SLA escalations
 
-# ⭐ Acknowledgments
+Adaptive Card notifications (Teams)
 
-This project follows enterprise patterns used in:
+Power BI dashboards
 
-- Modern Workplace Engineering  
-- Cloud Infrastructure Teams  
-- IT Operations & Service Management  
+AI category detection
 
-It demonstrates real-world skills expected from an **M365 / Cloud Engineer**.
+Technician mobile app (Power Apps)
 
----
+👤 Author
 
-**⭐ If you find this project useful, please give it a star!**
+Vidal Reñao Lopelo
+Cloud & IT Infrastructure Engineer
 
----
+📧 Email: mailto:vidal-31@hotmail.com
+🔗 LinkedIn: https://www.linkedin.com/in/vidalrenao
 
-*Last Updated: December 2024*  
-*Status: Production-ready*  
-*Version: 1.0*
+🐙 GitHub Profile: https://github.com/vidal-renao
 
+📦 Project Repo: https://github.com/vidal-renao/hybrid-identity-ticket-automation
+
+⭐ Acknowledgments
+
+This project follows engineering principles used in:
+
+Modern Workplace Engineering
+
+Cloud Infrastructure Teams
+
+IT Operations & ITSM
+
+If you find this project useful, please give it a star ⭐
+
+Last Updated: December 2024
+Status: Production-ready
+Version: 1.0
