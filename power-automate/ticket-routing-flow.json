@@ -3,19 +3,30 @@
     "name": "IT Ticket Routing - Automated",
     "description": "Automatically creates and routes IT support tickets based on request category",
     "version": "1.0",
-    "author": "IT Automation Team",
+    "author": "Vidal Reñao Lopelo",
     "created": "2024-12",
     "lastModified": "2024-12",
     "status": "Production",
     "environment": "Default",
-    "note": "This is a template. Actual flow JSON export contains tenant-specific IDs and must be imported through Power Automate portal."
+    "note": "This is a documentation template. Actual flow JSON export contains tenant-specific IDs and must be created or imported through the Power Automate portal."
+  },
+  "documentationLinks": {
+    "readme": "../README.md",
+    "setupGuide": "../documentation/setup-guide.md",
+    "flowLogicDiagram": "../documentation/flow-logic-diagram.png",
+    "architectureDiagram": "../documentation/architecture-diagram.png",
+    "flowVariables": "./flow-variables.md",
+    "formsTemplate": "../forms/it-request-form-template.json",
+    "sharePointSchema": "../sharepoint/tickets-list-schema.json",
+    "sharePointViews": "../sharepoint/custom-views.md",
+    "permissionsModel": "../sharepoint/permissions-model.md"
   },
   "trigger": {
     "type": "Microsoft Forms - When a new response is submitted",
     "displayName": "When a new response is submitted",
     "inputs": {
       "formId": "YOUR_FORM_ID_HERE",
-      "description": "Replace YOUR_FORM_ID_HERE with actual form ID from Microsoft Forms"
+      "description": "Replace YOUR_FORM_ID_HERE with the actual form ID from Microsoft Forms or reference ../forms/it-request-form-template.json"
     },
     "settings": {
       "polling": {
@@ -34,7 +45,7 @@
         "formId": "@triggerBody()?['resourceData']?['formId']",
         "responseId": "@triggerBody()?['resourceData']?['responseId']"
       },
-      "description": "Retrieves all form field values from the submission",
+      "description": "Retrieves all form field values from the submission.",
       "runAfter": {}
     },
     {
@@ -51,9 +62,11 @@
           }
         ]
       },
-      "description": "Creates empty string variable to store IT group assignment",
+      "description": "Creates empty string variable to store IT group assignment (see ./flow-variables.md for details).",
       "runAfter": {
-        "Get_response_details": ["Succeeded"]
+        "Get_response_details": [
+          "Succeeded"
+        ]
       }
     },
     {
@@ -71,9 +84,11 @@
           }
         }
       },
-      "description": "Tests if request type contains 'Hardware'",
+      "description": "Tests if request type contains 'Hardware'.",
       "runAfter": {
-        "Initialize_variable_-_AssignedGroup": ["Succeeded"]
+        "Initialize_variable_-_AssignedGroup": [
+          "Succeeded"
+        ]
       },
       "actions": {
         "if_yes": [
@@ -180,9 +195,11 @@
           "Location": "@body('Get_response_details')?['r<LOCATION_QUESTION_ID>']"
         }
       },
-      "description": "Creates new ticket in SharePoint with all form data and assigned group",
+      "description": "Creates a new ticket in SharePoint and assigns it to the group stored in AssignedGroup. SharePoint schema: ../sharepoint/tickets-list-schema.json.",
       "runAfter": {
-        "Check_if_Hardware_request": ["Succeeded"]
+        "Check_if_Hardware_request": [
+          "Succeeded"
+        ]
       }
     },
     {
@@ -196,9 +213,11 @@
         "body": "<p>Hello,</p><p>Your IT support request has been received and assigned to our <strong>@{variables('AssignedGroup')}</strong> team.</p><p><strong>Ticket Details:</strong></p><ul><li><strong>Issue:</strong> @{body('Get_response_details')?['r<BRIEF_SUMMARY_QUESTION_ID>']}</li><li><strong>Category:</strong> @{body('Get_response_details')?['r<REQUEST_TYPE_QUESTION_ID>']}</li><li><strong>Priority:</strong> @{body('Get_response_details')?['r<PRIORITY_QUESTION_ID>']}</li><li><strong>Assigned to:</strong> @{variables('AssignedGroup')}</li><li><strong>Ticket ID:</strong> @{body('Create_item_in_Tickets_list')?['ID']}</li></ul><p>Our team will review your request and respond as soon as possible based on the priority level.</p><p>Best regards,<br>IT Support Team</p>",
         "importance": "Normal"
       },
-      "description": "Sends confirmation to user with ticket details",
+      "description": "Sends a confirmation email to the requester with ticket details.",
       "runAfter": {
-        "Create_item_in_Tickets_list": ["Succeeded"]
+        "Create_item_in_Tickets_list": [
+          "Succeeded"
+        ]
       }
     },
     {
@@ -212,9 +231,11 @@
         "body": "<p>A new support ticket has been assigned to your team.</p><p><strong>Ticket Information:</strong></p><ul><li><strong>Ticket ID:</strong> @{body('Create_item_in_Tickets_list')?['ID']}</li><li><strong>Issue:</strong> @{body('Get_response_details')?['r<BRIEF_SUMMARY_QUESTION_ID>']}</li><li><strong>Description:</strong> @{body('Get_response_details')?['r<DETAILED_DESC_QUESTION_ID>']}</li><li><strong>Priority:</strong> @{body('Get_response_details')?['r<PRIORITY_QUESTION_ID>']}</li><li><strong>Category:</strong> @{body('Get_response_details')?['r<REQUEST_TYPE_QUESTION_ID>']}</li><li><strong>Requester:</strong> @{body('Get_response_details')?['responderEmail']}</li><li><strong>Contact Email:</strong> @{body('Get_response_details')?['r<CONTACT_EMAIL_QUESTION_ID>']}</li><li><strong>Location:</strong> @{body('Get_response_details')?['r<LOCATION_QUESTION_ID>']}</li></ul><p><a href=\"https://yourtenant.sharepoint.com/sites/ITSupport/Lists/Tickets/DispForm.aspx?ID=@{body('Create_item_in_Tickets_list')?['ID']}\">View ticket in SharePoint</a></p><p>Please review and update the ticket status as you work on this request.</p>",
         "importance": "@{if(equals(body('Get_response_details')?['r<PRIORITY_QUESTION_ID>'], 'High'), 'High', 'Normal')}"
       },
-      "description": "Notifies assigned IT group with full ticket details",
+      "description": "Notifies the assigned IT group with full ticket details and direct link to the SharePoint item.",
       "runAfter": {
-        "Send_confirmation_email_to_user": ["Succeeded"]
+        "Send_confirmation_email_to_user": [
+          "Succeeded"
+        ]
       }
     }
   ],
@@ -241,16 +262,16 @@
     ]
   },
   "dynamicContentMapping": {
-    "note": "Replace placeholder IDs with actual form question IDs",
+    "note": "Replace placeholder IDs with actual form question IDs. See ../forms/it-request-form-template.json for structure.",
     "placeholders": {
-      "<FORM_QUESTION_ID>": "Form question ID for 'Request Type' (e.g., r6b3a1c2d...)",
-      "<BRIEF_SUMMARY_QUESTION_ID>": "Form question ID for 'Brief summary'",
-      "<DETAILED_DESC_QUESTION_ID>": "Form question ID for 'Detailed description'",
+      "<FORM_QUESTION_ID>": "Form question ID for 'Request Category' (e.g., r6b3a1c2d...)",
+      "<BRIEF_SUMMARY_QUESTION_ID>": "Form question ID for 'Issue Summary'",
+      "<DETAILED_DESC_QUESTION_ID>": "Form question ID for 'Detailed Description'",
       "<PRIORITY_QUESTION_ID>": "Form question ID for 'Priority'",
-      "<CONTACT_EMAIL_QUESTION_ID>": "Form question ID for 'Contact email'",
+      "<CONTACT_EMAIL_QUESTION_ID>": "Form question ID for 'Best contact email'",
       "<LOCATION_QUESTION_ID>": "Form question ID for 'Location'"
     },
-    "howToFind": "In Power Automate, use dynamic content picker to select form fields. The IDs are auto-generated."
+    "howToFind": "In Power Automate, use the dynamic content picker to select form fields. The internal IDs are auto-generated."
   },
   "connections": {
     "required": [
@@ -277,36 +298,36 @@
   "deploymentInstructions": {
     "method": "Manual recreation (recommended)",
     "steps": [
-      "1. Open Power Automate (https://make.powerautomate.com)",
-      "2. Create new Automated cloud flow",
-      "3. Add trigger: Microsoft Forms - When a new response is submitted",
-      "4. Select your IT Support Request form",
-      "5. Add action: Forms - Get response details",
-      "6. Add action: Variables - Initialize variable (name: AssignedGroup, type: String)",
-      "7. Add nested conditions following the logic in this template",
-      "8. Add action: SharePoint - Create item",
-      "9. Map all form fields to SharePoint columns",
-      "10. Add action: Outlook - Send email (user confirmation)",
-      "11. Add action: Outlook - Send email (team notification)",
-      "12. Save and test with sample form submission",
-      "13. Monitor run history for any errors"
+      "1. Open Power Automate (https://make.powerautomate.com).",
+      "2. Create a new Automated cloud flow.",
+      "3. Add trigger: Microsoft Forms - When a new response is submitted.",
+      "4. Select your IT Support Request form (see ../forms/it-request-form-template.json).",
+      "5. Add action: Forms - Get response details.",
+      "6. Add action: Variables - Initialize variable (name: AssignedGroup, type: String).",
+      "7. Add nested conditions following the logic described in this file and in ../power-automate/flow-variables.md.",
+      "8. Add action: SharePoint - Create item (list: Tickets).",
+      "9. Map all form fields to SharePoint columns based on ../sharepoint/tickets-list-schema.json.",
+      "10. Add action: Outlook - Send email (user confirmation).",
+      "11. Add action: Outlook - Send email (team notification).",
+      "12. Save and test with a sample form submission.",
+      "13. Monitor run history for any errors."
     ],
     "alternativeMethod": {
-      "description": "Export/Import via Power Automate",
+      "description": "Export/Import via Power Automate package (.zip).",
       "steps": [
-        "1. In an existing flow, click 'Export' → 'Package (.zip)'",
-        "2. Download the package",
-        "3. In target environment, click 'Import' → 'Import Package'",
-        "4. Upload the .zip file",
-        "5. Configure all connections (Forms, SharePoint, Outlook)",
-        "6. Update site URLs and list names",
-        "7. Test thoroughly before enabling"
+        "1. In an existing flow, click 'Export' → 'Package (.zip)'.",
+        "2. Download the package.",
+        "3. In target environment, click 'Import' → 'Import Package'.",
+        "4. Upload the .zip file.",
+        "5. Configure all connections (Forms, SharePoint, Outlook).",
+        "6. Update site URLs, list names, and email addresses.",
+        "7. Test thoroughly before enabling in production."
       ],
       "limitations": [
-        "Connections must be reconfigured",
-        "Form IDs are environment-specific",
-        "SharePoint site URLs must be updated",
-        "Email addresses must be updated"
+        "Connections must be reconfigured per environment.",
+        "Form IDs are environment-specific.",
+        "SharePoint site URLs must be updated.",
+        "Email addresses and group names must be adjusted for your tenant."
       ]
     }
   },
@@ -366,7 +387,7 @@
         "expectedActions": [
           "SharePoint item created",
           "User confirmation sent",
-          "IT-ServiceDesk team notified"
+          "IT-ServiceDesk group notified"
         ]
       }
     ]
@@ -378,58 +399,58 @@
     "apiCalls": 5,
     "recommendedDailyLimit": "Unlimited (standard connectors)",
     "optimization": [
-      "Use variables to avoid repeated API calls",
-      "Minimize nested conditions where possible",
-      "Consider using Switch control for >4 categories"
+      "Use variables to avoid repeated API calls.",
+      "Minimize unnecessary nested conditions.",
+      "Consider using Switch control for more than 4 request categories."
     ]
   },
   "futureEnhancements": [
     {
       "feature": "SLA Due Date Calculation",
-      "description": "Add calculated due date based on priority",
+      "description": "Add calculated due date based on priority.",
       "complexity": "Medium",
-      "implementation": "Add compose action with expression: addHours(utcNow(), if(equals(Priority,'High'),4,if(equals(Priority,'Medium'),24,72)))"
+      "implementation": "Add Compose or additional variable with expression: addHours(utcNow(), if(equals(Priority,'High'),4,if(equals(Priority,'Medium'),24,72)))."
     },
     {
       "feature": "Microsoft Teams Notification",
-      "description": "Post ticket to Teams channel",
+      "description": "Post ticket information into a Teams channel.",
       "complexity": "Low",
-      "implementation": "Add 'Teams - Post message' action after SharePoint create"
+      "implementation": "Add 'Teams - Post message' action after the SharePoint create item step."
     },
     {
       "feature": "Approval Workflow",
-      "description": "Require manager approval for high-cost requests",
+      "description": "Require manager approval for high-cost or sensitive requests.",
       "complexity": "High",
-      "implementation": "Add approval action with condition checking request type or cost field"
+      "implementation": "Add an approval action with conditions on cost/priority/category."
     },
     {
       "feature": "Auto-Assignment to Individual",
-      "description": "Use AI or round-robin to assign to specific technician",
+      "description": "Use round-robin or AI-based logic to assign tickets to specific technicians within a team.",
       "complexity": "High",
-      "implementation": "Query SharePoint for team members, apply load balancing logic"
+      "implementation": "Query SharePoint or Entra ID for team members and distribute load with custom logic."
     }
   ],
   "troubleshooting": {
     "commonIssues": [
       {
-        "issue": "Flow fails with 'Access Denied' on SharePoint",
-        "cause": "Insufficient permissions for flow service account",
-        "solution": "Grant Contribute permission to the account running the flow on Tickets list"
+        "issue": "Flow fails with 'Access Denied' on SharePoint.",
+        "cause": "Insufficient permissions for the flow service account.",
+        "solution": "Grant Contribute permission to the account running the flow on the Tickets list."
       },
       {
-        "issue": "AssignedGroup variable is empty",
-        "cause": "Condition logic not matching any category",
-        "solution": "Verify 'contains' operator is used and spelling matches form exactly"
+        "issue": "AssignedGroup variable is empty.",
+        "cause": "Condition logic not matching any category.",
+        "solution": "Verify 'contains' operator is used and that Request Category values match exactly the expected strings."
       },
       {
-        "issue": "Emails not being sent",
-        "cause": "Invalid email address or group not mail-enabled",
-        "solution": "Verify IT groups are Microsoft 365 Groups with email enabled"
+        "issue": "Emails not being sent.",
+        "cause": "Invalid email address or group not mail-enabled.",
+        "solution": "Verify that IT groups are Microsoft 365 Groups or mail-enabled security groups with valid addresses."
       },
       {
-        "issue": "Form responses not triggering flow",
-        "cause": "Trigger polling interval or form connection issue",
-        "solution": "Check flow trigger history, verify form ID is correct, re-authenticate connection"
+        "issue": "Form responses not triggering the flow.",
+        "cause": "Trigger misconfiguration or connection issue.",
+        "solution": "Check flow trigger history, ensure the correct form is selected, and re-authenticate the Forms connection if needed."
       }
     ]
   },
@@ -437,80 +458,78 @@
     {
       "version": "1.0",
       "date": "2024-12",
-      "changes": ["Initial production release"],
-      "author": "IT Automation Team"
+      "changes": [
+        "Initial production release"
+      ],
+      "author": "Vidal Reñao Lopelo"
     }
-  ]
-}
-
-
-more methods
-{
-  "name": "IT Ticket Routing – Microsoft Forms to SharePoint",
-  "type": "DocumentationReference",
-  "description": "This flow automatically creates IT tickets in SharePoint based on Microsoft Forms submissions and assigns them to Microsoft 365 groups using conditional logic.",
-  "components": {
-    "trigger": {
-      "service": "Microsoft Forms",
-      "action": "When a new response is submitted",
-      "description": "Triggered whenever a user submits the IT Support Request form."
-    },
-    "actions": [
-      {
-        "step": 1,
-        "name": "Get response details",
+  ],
+  "documentationReference": {
+    "name": "IT Ticket Routing – Microsoft Forms to SharePoint",
+    "type": "DocumentationReference",
+    "description": "This flow automatically creates IT tickets in SharePoint based on Microsoft Forms submissions and assigns them to Microsoft 365 groups using conditional logic.",
+    "components": {
+      "trigger": {
         "service": "Microsoft Forms",
-        "description": "Retrieves all answers submitted in the form."
+        "action": "When a new response is submitted",
+        "description": "Triggered whenever a user submits the IT Support Request form. See ../forms/it-request-form-template.json."
       },
-      {
-        "step": 2,
-        "name": "Initialize variable",
-        "variable": "varAssignedToEmail",
-        "type": "String",
-        "initialValue": "",
-        "description": "Stores the email address of the Microsoft 365 group responsible for the ticket."
-      },
-      {
-        "step": 3,
-        "name": "Conditional routing",
-        "logic": [
-          {
-            "condition": "Request Category contains 'Hardware'",
-            "result": "varAssignedToEmail = it-hardware@VidalCloudSolutions.onmicrosoft.com"
-          },
-          {
-            "condition": "Request Category contains 'Software'",
-            "result": "varAssignedToEmail = it-software@VidalCloudSolutions.onmicrosoft.com"
-          },
-          {
-            "condition": "Request Category contains 'Network'",
-            "result": "varAssignedToEmail = it-network@VidalCloudSolutions.onmicrosoft.com"
-          },
-          {
-            "condition": "Default",
-            "result": "varAssignedToEmail = it-servicedesk@VidalCloudSolutions.onmicrosoft.com"
-          }
-        ]
-      },
-      {
-        "step": 4,
-        "name": "Create item",
-        "service": "SharePoint Online",
-        "list": "Tickets",
-        "description": "Creates a new ticket and assigns it to the group stored in varAssignedToEmail."
-      },
-      {
-        "step": 5,
-        "name": "Send confirmation email",
-        "service": "Office 365 Outlook",
-        "description": "Notifies the requester that the ticket has been created."
-      }
+      "actions": [
+        {
+          "step": 1,
+          "name": "Get response details",
+          "service": "Microsoft Forms",
+          "description": "Retrieves all answers submitted in the form."
+        },
+        {
+          "step": 2,
+          "name": "Initialize variable",
+          "variable": "AssignedGroup",
+          "type": "String",
+          "initialValue": "",
+          "description": "Stores the target IT group name for the ticket (see ./flow-variables.md)."
+        },
+        {
+          "step": 3,
+          "name": "Conditional routing",
+          "logic": [
+            {
+              "condition": "Request Category contains 'Hardware'",
+              "result": "AssignedGroup = 'IT-Hardware'"
+            },
+            {
+              "condition": "Request Category contains 'Software'",
+              "result": "AssignedGroup = 'IT-Software'"
+            },
+            {
+              "condition": "Request Category contains 'Network'",
+              "result": "AssignedGroup = 'IT-Network'"
+            },
+            {
+              "condition": "Default",
+              "result": "AssignedGroup = 'IT-ServiceDesk'"
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "name": "Create item",
+          "service": "SharePoint Online",
+          "list": "Tickets",
+          "description": "Creates a new ticket in the Tickets list (see ../sharepoint/tickets-list-schema.json) and assigns it to AssignedGroup."
+        },
+        {
+          "step": 5,
+          "name": "Send confirmation email",
+          "service": "Office 365 Outlook",
+          "description": "Notifies the requester that the ticket has been created."
+        }
+      ]
+    },
+    "notes": [
+      "Form IDs, site URLs, list names, and connections are tenant-specific.",
+      "This JSON is for documentation and reference. Actual flows must be built or imported via the Power Automate portal.",
+      "For full setup, see ../documentation/setup-guide.md and ../README.md."
     ]
-  },
-  "notes": [
-    "Form IDs, site URLs, and connections are tenant-specific.",
-    "This file is intended for documentation purposes only.",
-    "Flow logic should be recreated manually or packaged for import."
-  ]
+  }
 }
-
