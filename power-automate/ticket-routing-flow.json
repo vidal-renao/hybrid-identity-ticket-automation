@@ -442,3 +442,75 @@
     }
   ]
 }
+
+
+more methods
+{
+  "name": "IT Ticket Routing – Microsoft Forms to SharePoint",
+  "type": "DocumentationReference",
+  "description": "This flow automatically creates IT tickets in SharePoint based on Microsoft Forms submissions and assigns them to Microsoft 365 groups using conditional logic.",
+  "components": {
+    "trigger": {
+      "service": "Microsoft Forms",
+      "action": "When a new response is submitted",
+      "description": "Triggered whenever a user submits the IT Support Request form."
+    },
+    "actions": [
+      {
+        "step": 1,
+        "name": "Get response details",
+        "service": "Microsoft Forms",
+        "description": "Retrieves all answers submitted in the form."
+      },
+      {
+        "step": 2,
+        "name": "Initialize variable",
+        "variable": "varAssignedToEmail",
+        "type": "String",
+        "initialValue": "",
+        "description": "Stores the email address of the Microsoft 365 group responsible for the ticket."
+      },
+      {
+        "step": 3,
+        "name": "Conditional routing",
+        "logic": [
+          {
+            "condition": "Request Category contains 'Hardware'",
+            "result": "varAssignedToEmail = it-hardware@VidalCloudSolutions.onmicrosoft.com"
+          },
+          {
+            "condition": "Request Category contains 'Software'",
+            "result": "varAssignedToEmail = it-software@VidalCloudSolutions.onmicrosoft.com"
+          },
+          {
+            "condition": "Request Category contains 'Network'",
+            "result": "varAssignedToEmail = it-network@VidalCloudSolutions.onmicrosoft.com"
+          },
+          {
+            "condition": "Default",
+            "result": "varAssignedToEmail = it-servicedesk@VidalCloudSolutions.onmicrosoft.com"
+          }
+        ]
+      },
+      {
+        "step": 4,
+        "name": "Create item",
+        "service": "SharePoint Online",
+        "list": "Tickets",
+        "description": "Creates a new ticket and assigns it to the group stored in varAssignedToEmail."
+      },
+      {
+        "step": 5,
+        "name": "Send confirmation email",
+        "service": "Office 365 Outlook",
+        "description": "Notifies the requester that the ticket has been created."
+      }
+    ]
+  },
+  "notes": [
+    "Form IDs, site URLs, and connections are tenant-specific.",
+    "This file is intended for documentation purposes only.",
+    "Flow logic should be recreated manually or packaged for import."
+  ]
+}
+
