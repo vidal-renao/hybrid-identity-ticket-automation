@@ -1,52 +1,83 @@
 {
-  "title": "IT Support Request",
-  "description": "Submit an IT support request. Your ticket will be routed automatically to the appropriate IT team.",
+  "metadata": {
+    "version": "1.1",
+    "author": "Vidal Reñao Lopelo",
+    "description": "Template for the IT Support Request form used in hybrid identity + automated ticket routing system.",
+    "generated": "2024-12-11"
+  },
+  "title": "IT Support Request Form",
+  "description": "Submit an IT support request. Your request will be automatically routed to the appropriate IT team based on the category you select.",
   "questions": [
     {
       "id": "FullName",
       "type": "Text",
       "title": "Full Name",
+      "placeholder": "Enter your full name",
       "required": true
     },
     {
       "id": "WorkEmail",
       "type": "Text",
       "title": "Work Email",
-      "required": true
+      "placeholder": "name@company.com",
+      "required": true,
+      "validation": {
+        "pattern": ".+@vidalcloudsolutions\\.onmicrosoft\\.com$",
+        "description": "Corporate email required"
+      }
     },
     {
       "id": "Department",
       "type": "Choice",
       "title": "Department",
-      "options": ["HR", "Finance", "IT", "Operations", "Sales", "Warehouse"],
+      "options": [
+        "HR",
+        "Finance",
+        "IT",
+        "Operations",
+        "Sales",
+        "Warehouse"
+      ],
       "required": true,
       "multipleSelection": false
     },
     {
-      "id": "RequestType",
+      "id": "RequestCategory",
       "type": "Choice",
       "title": "Request Category",
-      "options": ["Hardware", "Software", "Network", "Other"],
+      "options": [
+        "Hardware",
+        "Software",
+        "Network",
+        "Other"
+      ],
       "required": true,
-      "multipleSelection": false
+      "multipleSelection": false,
+      "description": "This determines which IT team receives your ticket."
     },
     {
       "id": "IssueSummary",
       "type": "Text",
       "title": "Issue Summary",
+      "placeholder": "Short description of the request",
       "required": true
     },
     {
       "id": "DetailedDescription",
       "type": "TextLong",
       "title": "Detailed Description",
+      "placeholder": "Provide all relevant details to help the IT team resolve your issue",
       "required": true
     },
     {
       "id": "Priority",
       "type": "Choice",
       "title": "Priority",
-      "options": ["High", "Medium", "Low"],
+      "options": [
+        "High",
+        "Medium",
+        "Low"
+      ],
       "required": true,
       "multipleSelection": false
     },
@@ -60,7 +91,10 @@
       "id": "Attachment",
       "type": "FileUpload",
       "title": "Attachment (optional)",
-      "required": false
+      "description": "Upload a screenshot or supporting document",
+      "required": false,
+      "fileTypesAllowed": ["png", "jpg", "jpeg", "pdf"],
+      "maxFileCount": 1
     }
   ]
 }
