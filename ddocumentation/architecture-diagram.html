@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Identity & IT Ticketing Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 1400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+        
+        .diagram {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .component {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .component.identity {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .component.automation {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .component.storage {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .component.frontend {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .arrow {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .flow-description {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .flow-description h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .step {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .step-text {
+            display: inline;
+            color: #4a5568;
+            font-size: 14px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        
+        .legend-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+        }
+        
+        .download-btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 1024px) {
+            .diagram {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .diagram {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ Hybrid Identity & Automated IT Ticketing Architecture</h1>
+        <p class="subtitle">Enterprise-grade solution using Microsoft 365 services</p>
+        
+        <div class="diagram">
+            <div class="component identity">
+                <div class="icon">🏢</div>
+                <div class="title">On-Premises AD</div>
+                <div class="description">
+                    Source directory with domain users, security groups, and organizational units
+                </div>
+            </div>
+            
+            <div class="component identity">
+                <div class="icon">☁️</div>
+                <div class="title">Microsoft Entra ID</div>
+                <div class="description">
+                    Cloud identity platform with synced users, M365 groups, and unified authentication
+                </div>
+            </div>
+            
+            <div class="component automation">
+                <div class="icon">⚡</div>
+                <div class="title">Power Automate</div>
+                <div class="description">
+                    Intelligent routing engine with conditional logic and automated workflows
+                </div>
+            </div>
+            
+            <div class="component storage">
+                <div class="icon">📊</div>
+                <div class="title">SharePoint Online</div>
+                <div class="description">
+                    Ticket repository with custom lists, views, and complete audit trail
+                </div>
+            </div>
+            
+            <div class="component frontend">
+                <div class="icon">📝</div>
+                <div class="title">Microsoft Forms</div>
+                <div class="description">
+                    User-friendly interface for support request submissions
+                </div>
+            </div>
+            
+            <div class="component automation">
+                <div class="icon">📧</div>
+                <div class="title">Exchange Online</div>
+                <div class="description">
+                    Automated email notifications to users and IT teams
+                </div>
+            </div>
+            
+            <div class="component identity">
+                <div class="icon">👥</div>
+                <div class="title">IT Support Groups</div>
+                <div class="description">
+                    Hardware, Software, Network, and ServiceDesk teams
+                </div>
+            </div>
+            
+            <div class="component storage">
+                <div class="icon">🔍</div>
+                <div class="title">Operational Views</div>
+                <div class="description">
+                    Team dashboards, priority filtering, and reporting views
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-description">
+            <h3>📋 Ticket Flow Process</h3>
+            <div class="flow-steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <span class="step-text">User submits request via Microsoft Forms</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <span class="step-text">Power Automate trigger fires instantly</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <span class="step-text">Category evaluated (Hardware/Software/Network)</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <span class="step-text">AssignedGroup variable set based on logic</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <span class="step-text">SharePoint ticket created with all details</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <span class="step-text">Confirmation email sent to requester</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">7</span>
+                    <span class="step-text">Notification sent to assigned IT team</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">8</span>
+                    <span class="step-text">Team views ticket in SharePoint dashboard</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                <span>Identity Layer</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                <span>Automation</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                <span>Storage & Views</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                <span>User Interface</span>
+            </div>
+        </div>
+        
+    </div>
+    
+</body>
+</html>
