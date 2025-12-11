@@ -557,6 +557,128 @@ Manager Approval: [Yes/No] - [Manager Name]
 
 ---
 
+
+
+# Other Methods
+# SharePoint – Permissions Model (Tickets Management)
+
+This document describes the permission model applied to the **Tickets** SharePoint list
+used as the backend for automated IT ticket management.
+
+The model follows **enterprise best practices**:
+- Least privilege
+- Group-based access
+- No individual user permissions
+- Clear separation of responsibilities
+
+---
+
+## 1. Design Principles
+
+The permission model is based on the following principles:
+
+- ✅ Access is granted via **Microsoft 365 groups**, not individual users
+- ✅ Power Automate operates with explicit permissions
+- ✅ End users do not manage tickets directly
+- ✅ IT teams have controlled write access
+- ✅ The model is auditable and scalable
+
+---
+
+## 2. SharePoint Site Level Permissions
+
+**Site name**: IT Operations  
+**Site type**: Team Site (SharePoint Online)
+
+| Role / Group | Permission Level | Description |
+|-------------|------------------|-------------|
+| IT-Admins | Full Control | Site administration, list configuration, security |
+| IT-ServiceDesk | Edit | Ticket triage and coordination |
+| IT-Hardware | Edit | Hardware ticket handling |
+| IT-Software | Edit | Software ticket handling |
+| IT-Network | Edit | Network and VPN ticket handling |
+| End Users (optional) | Read | View-only access if required |
+
+> 🔒 In many environments, end users do not have access to the Tickets list at all.
+> Ticket interaction is handled exclusively by IT.
+
+---
+
+## 3. Tickets List Level Permissions
+
+### 3.1 Inheritance Strategy
+
+- ✅ **Permissions are inherited** from the site
+- ❌ No custom list-level permissions unless required
+
+This simplifies management and reduces configuration errors.
+
+---
+
+### 3.2 Power Automate Permissions
+
+Power Automate creates items in the Tickets list using:
+
+- The **connection owner account**
+- Or a **dedicated service account** (recommended in production)
+
+Required permissions:
+- **Contribute** on the Tickets list
+
+> ⚠️ The Power Automate account must also have permission to resolve:
+> - Users
+> - Microsoft 365 groups  
+> when populating the **Assigned to** field.
+
+---
+
+## 4. Assignment Model (Critical Concept)
+
+Tickets are **never assigned to individual users**.
+
+Instead:
+- The **Assigned to** field allows **Microsoft 365 groups**
+- Groups represent **functional IT teams**
+
+### Groups used for assignment
+
+| Group | Purpose |
+|-----|--------|
+| IT-ServiceDesk | Default intake and triage |
+| IT-Hardware | Hardware-related issues |
+| IT-Software | Software & licensing |
+| IT-Network | Network & connectivity |
+
+### Benefits
+
+- Scalability
+- No hardcoded users in flows
+- Easy onboarding / offboarding
+- Clear responsibility ownership
+- Accurate workload distribution
+
+---
+
+## 5. Visibility & Workload Management
+
+### 5.1 Team Views
+
+Each IT group has a dedicated SharePoint view filtered by:
+- Assigned to = Group
+- Status ≠ Closed
+
+This allows teams to:
+- See only relevant tickets
+- Avoid noise from other queues
+
+---
+
+### 5.2 Individual Workload
+
+The **"My Active Tickets"** view uses:
+
+
+
 ## Related Documentation
 
 - [Setup Guide](../documentation/setup-guide.md)
