@@ -1,4 +1,13 @@
 {
+  "documentationLinks": {
+    "readme": "../README.md",
+    "setupGuide": "../documentation/setup-guide.md",
+    "permissionsModel": "./permissions-model.md",
+    "customViews": "./custom-views.md",
+    "flowDefinition": "../power-automate/ticket-routing-flow.json",
+    "flowVariables": "../power-automate/flow-variables.md",
+    "formsTemplate": "../forms/it-request-form-template.json"
+  },
   "listName": "Tickets",
   "description": "IT Support Ticket Repository",
   "showInNavigation": true,
@@ -491,13 +500,18 @@
         {
           "name": "High Priority Tickets",
           "condition": "Priority equals High",
-          "recipients": ["IT Manager", "IT-ServiceDesk"],
+          "recipients": [
+            "IT Manager",
+            "IT-ServiceDesk"
+          ],
           "frequency": "Immediate"
         },
         {
           "name": "Overdue Tickets",
           "condition": "Created older than 24 hours AND Status not equals Resolved",
-          "recipients": ["IT Manager"],
+          "recipients": [
+            "IT Manager"
+          ],
           "frequency": "Daily Summary"
         }
       ]
@@ -535,7 +549,7 @@
   "metadata": {
     "version": "1.0",
     "created": "2024-12",
-    "author": "IT Automation Team",
+    "author": "Vidal Reñao Lopelo",
     "lastModified": "2024-12",
     "schemaCompatibility": "SharePoint Online",
     "notes": "This schema supports the hybrid identity ticketing automation project. All fields map to Microsoft Forms and Power Automate actions."
@@ -565,77 +579,6 @@
       "field": "RelatedTickets",
       "type": "Lookup",
       "description": "Link to related tickets for pattern analysis"
-    }
-  ]
-}
-
-
-
-
-more methods
-{
-  "listName": "Tickets",
-  "description": "Central repository for IT support tickets created automatically by Power Automate.",
-  "columns": [
-    {
-      "internalName": "Title",
-      "displayName": "Issue",
-      "type": "Single line of text",
-      "required": true,
-      "description": "Short summary of the IT request."
-    },
-    {
-      "internalName": "IssueDescription",
-      "displayName": "Issue description",
-      "type": "Multiple lines of text",
-      "required": true,
-      "description": "Detailed description generated from Microsoft Forms data."
-    },
-    {
-      "internalName": "RequestCategory",
-      "displayName": "Request Category",
-      "type": "Choice",
-      "choices": ["Hardware", "Software", "Network", "Other"],
-      "default": "Other",
-      "required": true
-    },
-    {
-      "internalName": "Priority",
-      "displayName": "Priority",
-      "type": "Choice",
-      "choices": ["High", "Medium", "Low"],
-      "default": "Medium",
-      "required": true
-    },
-    {
-      "internalName": "Status",
-      "displayName": "Status",
-      "type": "Choice",
-      "choices": ["New", "In Progress", "Resolved", "Closed"],
-      "default": "New",
-      "required": true
-    },
-    {
-      "internalName": "AssignedTo",
-      "displayName": "Assigned to",
-      "type": "Person or Group",
-      "allowGroups": true,
-      "required": false,
-      "description": "Microsoft 365 group responsible for resolving the ticket."
-    },
-    {
-      "internalName": "Requester",
-      "displayName": "Requester",
-      "type": "Person or Group",
-      "required": true,
-      "description": "User who submitted the request."
-    },
-    {
-      "internalName": "DueDate",
-      "displayName": "Due Date",
-      "type": "Date",
-      "required": false,
-      "description": "Requested resolution date."
     }
   ]
 }
