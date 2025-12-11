@@ -334,6 +334,90 @@ concat(variables('AssignedGroup'), '@yourdomain.com')
 
 ---
 
+
+
+
+# Power Automate – Flow Variables
+
+This document describes the variables used in the **IT Ticket Routing** flow and how they support automated assignment of tickets to Microsoft 365 groups.
+
+---
+
+## 1. Overview
+
+The flow is designed to:
+
+- Leer una respuesta de **Microsoft Forms**
+- Decidir qué equipo de IT debe gestionar el ticket
+- Guardar esa decisión en una **variable**
+- Usar la variable en:
+  - La creación del ticket en **SharePoint**
+  - Las notificaciones por **correo**
+
+La variable clave de este flujo es:
+
+- `varAssignedToEmail` → contiene el **email del grupo M365** que recibirá el ticket.
+
+---
+
+## 2. Variable: `varAssignedToEmail`
+
+### 2.1 Definición
+
+- **Nombre**: `varAssignedToEmail`  
+- **Tipo**: `String`  
+- **Ámbito**: Global (toda la ejecución del flow)  
+- **Inicialización**: Justo después de **Get response details**  
+- **Valor inicial**: Cadena vacía (`""`)
+
+Ejemplo de acción:
+
+> **Initialize variable**  
+> Name: `varAssignedToEmail`  
+> Type: `String`  
+> Value: *(empty)*
+
+---
+
+
+
+
+### 2.2 Objetivo
+
+`varAssignedToEmail` se usa para almacenar el **correo electrónico** del grupo de Microsoft 365 al que se asignará el ticket.
+
+Ejemplos de valores:
+
+| Equipo IT        | Valor de `varAssignedToEmail`                                   |
+|------------------|-----------------------------------------------------------------| 
+| IT Service Desk  | `it-servicedesk@VidalCloudSolutions.onmicrosoft.com`           |
+| IT Hardware      | `it-hardware@VidalCloudSolutions.onmicrosoft.com`              |
+| IT Software      | `it-software@VidalCloudSolutions.onmicrosoft.com`              |
+| IT Network       | `it-network@VidalCloudSolutions.onmicrosoft.com`               |
+
+---
+
+### 2.3 Lógica de asignación
+
+La variable se establece usando **Conditions** (no Switch), basadas en los datos del formulario.
+
+Ejemplo de lógica típica (simplificada):
+
+```pseudo
+IF RequestType contains 'Hardware'
+    varAssignedToEmail = 'it-hardware@VidalCloudSolutions.onmicrosoft.com'
+ELSE IF RequestType contains 'Software'
+    varAssignedToEmail = 'it-software@VidalCloudSolutions.onmicrosoft.com'
+ELSE IF RequestType contains 'Network'
+    varAssignedToEmail = 'it-network@VidalCloudSolutions.onmicrosoft.com'
+ELSE
+    varAssignedToEmail = 'it-servicedesk@VidalCloudSolutions.onmicrosoft.com'
+
+
+
+
+
+
 ## Change Log
 
 | Version | Date | Change | Author |
