@@ -146,7 +146,6 @@ Full setup instructions:
 
 ```
 documentation/
- ├── setup-guide.md
  └── setup-guide.md
 
 power-automate/
