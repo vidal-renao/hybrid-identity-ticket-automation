@@ -112,10 +112,16 @@ Features:
 # Architecture Diagrams
 
 ## Architecture Overview
-![Architecture Diagram](documentation/architecture-diagram.png)
+```mermaid
+flowchart LR
+    Request[Microsoft Forms request] --> Flow[Power Automate reference flow]
+    Identity[Entra ID groups] --> Flow
+    Flow --> Tickets[SharePoint ticket list]
+    Flow --> Notify[Team notification]
+```
 
 ## Flow Logic Diagram
-![Flow Logic Diagram](documentation/flow-logic-diagram.png)
+Requests are routed by category: Hardware → IT-Hardware, Software → IT-Software, Network → IT-Network; other categories → IT-ServiceDesk.
 
 Setup Guide:  
 `documentation/setup-guide.md`
@@ -141,8 +147,7 @@ Full setup instructions:
 ```
 documentation/
  ├── setup-guide.md
- ├── architecture-diagram.png
- └── flow-logic-diagram.png
+ └── setup-guide.md
 
 power-automate/
  ├── ticket-routing-flow.json
