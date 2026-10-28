@@ -1,13 +1,17 @@
 # Hybrid Identity & Automated IT Ticket Routing
-Enterprise-grade IT Operations Automation with Microsoft 365
+Microsoft 365 identity and ticket-routing reference lab
 
-![Status](https://img.shields.io/badge/status-production-success)
-![Documentation](https://img.shields.io/badge/docs-complete-blue)
+![Status](https://img.shields.io/badge/status-reference%20lab-blue)
+![Documentation](https://img.shields.io/badge/docs-reference-blue)
 ![Microsoft365](https://img.shields.io/badge/Microsoft%20365-Automation-blue)
 ![PowerAutomate](https://img.shields.io/badge/Power%20Automate-Flow-purple)
 ![SharePoint](https://img.shields.io/badge/SharePoint-Ticketing%20Backend-green)
 
-This repository contains a complete implementation of a Hybrid Identity lab and an automated IT ticket routing system built with Microsoft 365:
+This repository documents a Hybrid Identity lab and a Microsoft 365 ticket-routing design. It includes schemas, screenshots and reference templates; it is not a packaged production deployment.
+
+**Important:** `power-automate/ticket-routing-flow.json` is a documentation template with environment placeholders, not an importable Power Automate solution. Recreate the flow in your own test environment and configure its connections.
+
+The design covers:
 
 - Microsoft Entra ID (Azure AD)
 - Active Directory (optional hybrid identity)
@@ -54,7 +58,7 @@ Includes fields for:
 
 ## Automated Ticket Routing (Power Automate)
 
-The flow creates SharePoint tickets automatically and routes them to the correct IT team.
+The documented flow is designed to create SharePoint tickets and route them to the correct IT team once recreated and configured.
 
 Flow definition:  
 `power-automate/ticket-routing-flow.json`
@@ -123,9 +127,9 @@ Setup Guide:
 1. Deploy hybrid identity (optional)
 2. Create Microsoft 365 IT groups
 3. Deploy the SharePoint Tickets list
-4. Import the Microsoft Form
-5. Import or recreate the Power Automate flow
-6. Test the full workflow
+4. Recreate the Microsoft Form using the provided field template
+5. Recreate the Power Automate flow using the reference JSON and configure tenant-specific connections
+6. Test routing, permissions and notifications in your own lab
 
 Full setup instructions:  
 `documentation/setup-guide.md`
@@ -228,13 +232,12 @@ README.md
 # Author
 
 **Vidal Reñao Lopelo**  
-Cloud & IT Infrastructure Engineer
+IT Systems Administrator & Full-Stack Developer
 
-Email: vidal-31@hotmail.com  
+Portfolio: https://vidal-pro-portfolio.vercel.app/en  
 LinkedIn: https://www.linkedin.com/in/vidalrenao  
 GitHub: https://github.com/vidal-renao  
 Project Repo: https://github.com/vidal-renao/hybrid-identity-ticket-automation
 
-Last Updated: December 2024  
-Version: 1.0  
-Status: Production-ready
+Documentation reviewed: October 2026  
+Status: Reference lab — environment setup and validation required
